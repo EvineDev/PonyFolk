@@ -101,9 +101,6 @@ function love.keypressed(key,isRepeat)
 	if isRepeat == false then
 		heart.debug.keypressed(key)
 		window.keypressed(key)
-
-		gameplay.keypressed(key)
-		--asset.keypressed(key)
 	end
 end
 function love.keyreleased(key)
