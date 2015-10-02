@@ -1,1 +1,2 @@
-personalwindow.lua #Add this to file "return {y = 0,taskbarHeight = 40}"
+#Add your personal y position of the window and taskbarheight to the file "return {y = 0,taskbarHeight = 40}"
+personalwindow.lua
