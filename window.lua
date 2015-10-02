@@ -1,17 +1,11 @@
 window = window or {}
-do
-	
-
-end
 
 if window.init == nil then
 	local checkFile = pcall(function() require "personalwindow" end)
 
 	if checkFile then
-		print("seoigv")
 		window.magicValue = require "personalwindow"
 	else
-		print("ioejf")
 		window.magicValue = {y = 0,taskbarHeight = 40}
 	end
 
