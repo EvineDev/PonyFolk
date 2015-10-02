@@ -1,9 +1,26 @@
 window = window or {}
+do
+	
+
+end
+
 if window.init == nil then
+	local checkFile = pcall(function() require "personalwindow" end)
+
+	if checkFile then
+		print("seoigv")
+		window.magicValue = require "personalwindow"
+	else
+		print("ioejf")
+		window.magicValue = {y = 0,taskbarHeight = 40}
+	end
+
+
+
 	window.desktop = {love.window.getDesktopDimensions()}
 	if love._os == "Windows" then
 		window.width = 960
-		window.height = window.desktop[2] - 40
+		window.height = window.desktop[2] - window.magicValue.taskbarHeight
 	elseif love._os == "OS X" then
 		window.width = 720
 		window.height = window.desktop[2] - 23
@@ -20,7 +37,7 @@ function window.start()
 		width , height = window.width , window.height
 		flag = {}
 		flag.x = window.desktop[1] - width
-		flag.y = 0
+		flag.y = window.magicValue.y
 		flag.borderless = true
 		flag.resizable = false
 		flag.highdpi = true
