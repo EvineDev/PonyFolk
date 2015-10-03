@@ -79,6 +79,11 @@ local function compareBufferZlevel(a,b)
 	return compareKey(a,b,"bufferZlevel")
 end
 
+local areaMarked = {}
+local areaThings = {}
+
+
+
 function grid.update()
 
 
@@ -242,7 +247,7 @@ function grid.update()
 
 
 	--drawTileWraped(tilesq.image, 3,0,0,math.pi*2,1)
-	--[[
+--[[
 	drawWallWraped(wallsq.image, 3,-0.5,0,1,0,1)
 
 	
@@ -281,7 +286,7 @@ function grid.update()
 	drawWallWraped(wallsq.image, -0.5,3,0,-1)
 	--drawTileWraped(tilesq.image, 0,3)
 
-	--]]
+
 	--drawWallWraped(wallsq.image, 1+2, 3.6,0,1)
 	
 
@@ -295,7 +300,7 @@ function grid.update()
 
 	--drawTileDirect(tile.image, 2,0,0,0,1)
 	--drawWallDirect(wall.image, 2,-0.5,0,0,1,1)
-
+--]]
 
 	-- Render stuff
 	--[[
@@ -456,7 +461,7 @@ function grid.update()
 
 
 
-	--[[
+--[[
 	love.graphics.setColor(230,230,230)
 	--love.graphics.rectangle("fill",0,0,1920,1080)
 	
@@ -536,28 +541,14 @@ function grid.update()
 	collectgarbage("stop")
 	local opegr = collectgarbage("count")
 	if true then
-		local areaMarked = {}
-		local areaThings = {}
 		local sortedTable = {}
 
-		-- Not sure if it's better to declare these funcions here or to pull the tables out into file global scope and redeclare the tables every frame.
-		local function mark(x,y,w,h)
-			grid.mark(x,y,w,h,areaMarked,areaThings)
-		end
-		local function recursiveInsert(i)
-			grid.recursiveInsert(i,areaThings,sortedTable)
-		end
-
 		-- Test code mark inserts the sprites
-		for x = -5, 6 do
-			for y = -5, 6 do
-				mark(x*6,y*6,3,3)
-			end
-		end
-		if mouse.left then
+		
+		if mouse.beenReleased.left then 
 			local x,y = grid.tilePressedX,grid.tilePressedY
 			local w,h = math.round(grid.mouse.x)-grid.tilePressedX , math.round(grid.mouse.y)-grid.tilePressedY
-			mark(x,y,w,h)
+			grid.mark(x,y,w,h)
 		end
 
 		-- Create dependecies.
@@ -623,13 +614,14 @@ function grid.update()
 		if true then
 			
 			for i = 1, #areaThings do
-				recursiveInsert(i)
+				grid.recursiveInsert(i,sortedTable)
 			end
 			for i =  #sortedTable , 1 , -1 do
 				local val = (sortedTable[i]/(#sortedTable))
 				
-				love.graphics.setColor(heart.hsv((#sortedTable-i)*(300/#sortedTable),1-val+0.2,val+0.2))
+				heart.sethsv((#sortedTable-i)*(300/#sortedTable),1-val+0.2,val+0.2)
 				coverPoly(areaThings[sortedTable[i]],#sortedTable-i)
+				areaThings[sortedTable[i]].recorded = nil
 			end
 		end
 		
@@ -639,51 +631,17 @@ function grid.update()
 	collectgarbage("restart")
 
 
-	--love.graphics.setColor(255,255,255)
-	--coverPoly(0,0)
-
-	--local posx,posy = translateToIso(-0.25+0.5,-0.3)
-
-	--love.graphics.setColor(255,255,255,255)
-	--love.graphics.draw(
-	--	refrigerator,
-	--	posx,
-	--	posy,
-	--	0,
-	--	grid.blockSizeWidth*0.001,
-	--	nil,
-	--	refrigerator:getWidth()/2,
-	--	refrigerator:getHeight()/2)
-	
-	--insertThing(
-	--	0,-1,
-	--	1,-1,
-	--	0,0,
-	--	1,0,
-	--	0,1,
-	--	1,1
-	--	)
-
-	--love.graphics.setColor(255,255,255)
-	--love.graphics.draw(someSofa1,mouse.x,418,0,grid.blockSizeWidth*0.001)
-	--love.graphics.draw(someSofa2,mouse.x+grid.blockSizeWidth/2,418,0,grid.blockSizeWidth*0.001)
-	--love.graphics.draw(someSofa3,mouse.x+grid.blockSizeWidth,418,0,grid.blockSizeWidth*0.001)
-	--love.graphics.draw(someSofa4,mouse.x+grid.blockSizeWidth*1.5,418,0,grid.blockSizeWidth*0.001)
-
-
-
 	grid.blockSize = ui.slider(grid.blockSize , 1300,910,600,150,2,500 )
 	grid.blockSizeWidth = grid.blockSize*(math.sqrt(2)*2)
 	
 end
 
 
-function grid.recursiveInsert(i,areaThings,sortedTable)
+function grid.recursiveInsert(i,sortedTable)
 	if not areaThings[i].recorded then
-
 		if areaThings[i].dep then
 			for j = 1, #areaThings[i].dep do
-				grid.recursiveInsert(areaThings[i].dep[j],areaThings,sortedTable)
+				grid.recursiveInsert(areaThings[i].dep[j],sortedTable)
 				--printv(i,"::",j)
 			end
 		end
@@ -695,7 +653,7 @@ function grid.recursiveInsert(i,areaThings,sortedTable)
 end
 
 
-function grid.mark(x,y,w,h,areaMarked,areaThings) -- 0 based: w,h?
+function grid.mark(x,y,w,h) -- 0 based: w,h?
 	if w < 0 then
 		x = x+w
 		w = -w
@@ -740,6 +698,12 @@ function insert2d(tableTo,x,y,thing)
 end
 
 
+
+for x = -5, 6 do
+	for y = -5, 6 do
+		grid.mark(x*7,y*7,3,3)
+	end
+end
 
 --[[
 refrigerator = love.graphics.newImage("Couchbw2.png")

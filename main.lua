@@ -242,12 +242,12 @@ do  --Default
 		if _toSleep then
 			love.timer.sleep(1)
 		end
-		-- Update dt, as we'll be passing it to update
+
 		do
 			love.timer.step()
 			dt =  love.timer.getDelta()
 			if dt > 0.04 then
-				dt = 0.04
+				dt = 0.04 -- Clamp dt
 			end
 		end
 	    
@@ -259,9 +259,9 @@ do  --Default
 
 		heart.runningTimer()
 		if _Debug then
-	    	xpcall(heart.update,heart.updateHandler)
+			xpcall(heart.update,heart.updateHandler)
 		else
-	    	heart.update()
+			heart.update()
 		end
 		love.graphics.origin()
 		heart.pushUpdate()
