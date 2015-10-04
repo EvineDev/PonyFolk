@@ -11,6 +11,7 @@ asset.save = {}
 asset.folderInk = {}
 asset.moveable = false
 asset.instructions = false
+asset.mark = false
 
 -- tests
 --love.filesystem.write("metadataimage.lua","print('Apples'); --assert(false)\n--garbage ewoifj")
@@ -137,7 +138,7 @@ function catcheImage(fileName)
 	return currentImage
 end
 
-function asset.drawInThrash(fileName)
+function asset.drawCurrent(fileName)
 
 	
 	local image = catcheImage(fileName) -- This is the fileName
@@ -150,7 +151,7 @@ function asset.drawInThrash(fileName)
 		currentImageCollisionY = saveInfo.h
 	else
 		if asset.moveable then
-			posx,posy = translateToScreen(mouse.x,mouse.y)
+			posx,posy = translateToIso(mouse.x,mouse.y)
 		end
 
 		scaleMod = ui.slider(scaleMod,1500,20,400,75,0.05,4)
@@ -161,7 +162,7 @@ function asset.drawInThrash(fileName)
 		heart.pop()
 	end
 
-	local screenX,screenY = translateToIso(posx,posy)
+	local screenX,screenY = translateToScreen(posx,posy)
 	local scale = grid.blockSize/250 * scaleMod
 	
 	
@@ -256,7 +257,7 @@ function asset.downFolderCommon(typeFile,item,fileName,ink,valid)
 	end
 	if asset.folderInk[ink] == fileName then
 		if typeFile == "file" then
-			asset.drawInThrash(item)
+			asset.drawCurrent(item)
 		end
 		color(hue,0.6)
 	end
@@ -424,7 +425,7 @@ function asset.draw()
 	end
 
 end
-asset.mark = false
+
 function asset.polyDraw(x,y,w,h)
 	for xi = 0, w-1 do
 		for yi = 0, h-1 do

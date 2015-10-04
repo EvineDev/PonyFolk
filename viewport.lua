@@ -5,13 +5,15 @@ if viewport.init == nil then
 	viewport.init = true
 	viewport.translateX = 0
 	viewport.translateY = 0
+	viewport.width = 1920
+	viewport.height = 1080
 end
 
 
 
 
 function viewport.load()
-	viewport.fullCanvas = love.graphics.newCanvas(1920, 1080)
+	viewport.fullCanvas = love.graphics.newCanvas(1920, 1080) -- unhard code this
 	--viewport.halfCanvas = love.graphics.newCanvas(1920/2, 1080/2) -- uncomment this for trilinear filtering
 	love.graphics.setCanvas(viewport.fullCanvas)
 end

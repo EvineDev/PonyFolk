@@ -62,7 +62,7 @@ love.graphics.setCanvas()
 
 
 function grid.mouseupdate()
-	grid.mouse.x , grid.mouse.y = translateToScreen(mouse.x,mouse.y)
+	grid.mouse.x , grid.mouse.y = translateToIso(mouse.x,mouse.y)
 end
 
 grid.tilePressedX = 0
@@ -79,6 +79,27 @@ local function compareBufferZlevel(a,b)
 	return compareKey(a,b,"bufferZlevel")
 end
 
+local function coverPoly(inTable)
+	x,y,w,h = inTable.x , inTable.y ,  inTable.w , inTable.h
+
+
+	t1, t2 = translateToScreen(x+w+0.5,y+h+0.5)
+	t3, t4 = translateToScreen(x-0.5,y+h+0.5)
+	t5, t6 = translateToScreen(x-0.5,y+h+0.5,4)
+	t7, t8 = translateToScreen(x-0.5,y-0.5,4)
+	t9, t10 = translateToScreen(x+w+0.5,y-0.5,4)
+	t11, t12 = translateToScreen(x+w+0.5,y-0.5)
+	love.graphics.polygon("fill",t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12)
+
+	centerx, centery = translateToScreen(x+w+0.5,y+h+0.5,4)
+	love.graphics.setColor(0,0,0)
+	love.graphics.line(centerx, centery , translateToScreen(x+w+0.5,y-0.5,4))
+	love.graphics.line(centerx, centery , translateToScreen(x-0.5,y+h+0.5,4))
+	love.graphics.line(centerx, centery , translateToScreen(x+w+0.5,y+h+0.5,0))
+	love.graphics.polygon("line",t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12)
+end
+
+
 local areaMarked = {}
 local areaThings = {}
 
@@ -88,14 +109,6 @@ function grid.update()
 
 
 
-	-- Translate
-	--grid.mouse.x = mouse.x - 960
-	--grid.mouse.y = mouse.y - 540
-	-- Scale
-	--grid.mouse.x = grid.mouse.x * 0.5
-	--Rotate
-	--grid.mouse = v2.newAngle(grid.mouse:angle() -math.pi/4 , grid.mouse:length() )
-	--grid.mouse = grid.mouse/grid.blockSize
 
 	
 
@@ -111,7 +124,7 @@ function grid.update()
 	
 	-- Grid transformation
 	heart.push()
-	love.graphics.translate(960,540)
+	love.graphics.translate(viewport.width/2,viewport.height/2)
 	love.graphics.scale(2,1)
 	love.graphics.rotate(math.pi/4)
 	--Test outline
@@ -123,10 +136,10 @@ function grid.update()
 		for y = -grid.size/2 + 0.5 , grid.size/2-0.5 do
 			--if  math.abs(x) + math.abs(y) < grid.outline.width and y + x < grid.outline.height and y + x > -grid.outline.height or math.abs(x) + math.abs(y) < grid.outline.height and y - x < grid.outline.width and y - x > -grid.outline.width then
 
-			local point1 , point2 = translateToIso(x+0.5,y+0.5)
-			local point3 , point4 = translateToIso(x+0.5,y-0.5)
-			local point5 , point6 = translateToIso(x-0.5,y-0.5)
-			local point7 , point8 = translateToIso(x-0.5,y+0.5)
+			local point1 , point2 = translateToScreen(x+0.5,y+0.5)
+			local point3 , point4 = translateToScreen(x+0.5,y-0.5)
+			local point5 , point6 = translateToScreen(x-0.5,y-0.5)
+			local point7 , point8 = translateToScreen(x-0.5,y+0.5)
 
 			--love.graphics.polygon("line",point1,point2,point3,point4,point5,point6,point7,point8)
 			--end
@@ -150,10 +163,10 @@ function grid.update()
 
 			love.graphics.setColor(heart.hsv(240/529*color,1,1))
 			
-			local point1 , point2 = translateToIso(x+0.5,y+0.5)
-			local point3 , point4 = translateToIso(x+0.5,y-0.5)
-			local point5 , point6 = translateToIso(x-0.5,y-0.5)
-			local point7 , point8 = translateToIso(x-0.5,y+0.5)
+			local point1 , point2 = translateToScreen(x+0.5,y+0.5)
+			local point3 , point4 = translateToScreen(x+0.5,y-0.5)
+			local point5 , point6 = translateToScreen(x-0.5,y-0.5)
+			local point7 , point8 = translateToScreen(x-0.5,y+0.5)
 
 			love.graphics.polygon("line",point1,point2,point3,point4,point5,point6,point7,point8)
 			--end
@@ -189,10 +202,10 @@ function grid.update()
 
 			
 			
-			local point1 , point2 = translateToIso(y+xOnGrid+0.5,x-xOnGrid+0.5)
-			local point3 , point4 = translateToIso(y+xOnGrid-0.5,x-xOnGrid+0.5)
-			local point5 , point6 = translateToIso(y+xOnGrid-0.5,x-xOnGrid-0.5)
-			local point7 , point8 = translateToIso(y+xOnGrid+0.5,x-xOnGrid-0.5)
+			local point1 , point2 = translateToScreen(y+xOnGrid+0.5,x-xOnGrid+0.5)
+			local point3 , point4 = translateToScreen(y+xOnGrid-0.5,x-xOnGrid+0.5)
+			local point5 , point6 = translateToScreen(y+xOnGrid-0.5,x-xOnGrid-0.5)
+			local point7 , point8 = translateToScreen(y+xOnGrid+0.5,x-xOnGrid-0.5)
 
 			love.graphics.polygon("line",point1,point2,point3,point4,point5,point6,point7,point8)
 		end
@@ -312,7 +325,7 @@ function grid.update()
 
 			love.graphics.setColor(255,255,255)
 			local buffer = grid.bufferDraw[i]
-			local screenX , screenY = translateToIso(buffer.x,buffer.y,buffer.z)
+			local screenX , screenY = translateToScreen(buffer.x,buffer.y,buffer.z)
 			if buffer.tileType == "wrappedWall" then
 				love.graphics.draw(buffer.image,
 					screenX,
@@ -426,25 +439,25 @@ function grid.update()
 
 		love.graphics.setColor(0,0,0)
 		for i = 1, #line, 3 do
-			local x,y = translateToIso(line[i],line[i+1])
+			local x,y = translateToScreen(line[i],line[i+1])
 			love.graphics.circle("fill",x,y,20)
 
 			local x1a,y1a,x2a,y2a , x1b,y1b,x2b,y2b
 			if line[i+2] == "r" then
-				x1a,y1a = translateToIso(line[i]-0.1,line[i+1]-0.5)
-				x2a,y2a = translateToIso(line[i]-0.1,line[i+1]+0.5)
-				x1b,y1b = translateToIso(line[i]+0.1,line[i+1]-0.5)
-				x2b,y2b = translateToIso(line[i]+0.1,line[i+1]+0.5)
+				x1a,y1a = translateToScreen(line[i]-0.1,line[i+1]-0.5)
+				x2a,y2a = translateToScreen(line[i]-0.1,line[i+1]+0.5)
+				x1b,y1b = translateToScreen(line[i]+0.1,line[i+1]-0.5)
+				x2b,y2b = translateToScreen(line[i]+0.1,line[i+1]+0.5)
 			elseif line[i+2] == "l" then
-				x1a,y1a = translateToIso(line[i]-0.5,line[i+1]-0.1)
-				x2a,y2a = translateToIso(line[i]+0.5,line[i+1]-0.1)
-				x1b,y1b = translateToIso(line[i]-0.5,line[i+1]+0.1)
-				x2b,y2b = translateToIso(line[i]+0.5,line[i+1]+0.1)
+				x1a,y1a = translateToScreen(line[i]-0.5,line[i+1]-0.1)
+				x2a,y2a = translateToScreen(line[i]+0.5,line[i+1]-0.1)
+				x1b,y1b = translateToScreen(line[i]-0.5,line[i+1]+0.1)
+				x2b,y2b = translateToScreen(line[i]+0.5,line[i+1]+0.1)
 			end
 			love.graphics.line(x1a,y1a,x2a,y2a)
 			love.graphics.line(x1b,y1b,x2b,y2b)
 		end
-		local posx,posy = 960,540
+		local posx,posy = viewport.width/2,viewport.height/2
 		heart.push("all")
 		love.graphics.setLineWidth(grid.blockSize*0.2)
 		love.graphics.setLineJoin("miter")
@@ -469,16 +482,16 @@ function grid.update()
 	love.graphics.setColor(0,0,0)
 	
 	local pos = {{},{},{},{},{}}
-	pos[1][1],pos[1][2] = translateToIso(0+0.25,0-0.25,10)
-	pos[1][3],pos[1][4] = translateToIso(0+0.25,0-0.25,-10)
-	pos[2][1],pos[2][2] = translateToIso(0+0.75,0-0.75,10)
-	pos[2][3],pos[2][4] = translateToIso(0+0.75,0-0.75,-10)
-	pos[3][1],pos[3][2] = translateToIso(0-0.25,0+0.25,10)
-	pos[3][3],pos[3][4] = translateToIso(0-0.25,0+0.25,-10)
-	pos[4][1],pos[4][2] = translateToIso(0-0.75,0+0.75,10)
-	pos[4][3],pos[4][4] = translateToIso(0-0.75,0+0.75,-10)
-	pos[5][1],pos[5][2] = translateToIso(0+1.25,0-1.25,10)
-	pos[5][3],pos[5][4] = translateToIso(0+1.25,0-1.25,-10)
+	pos[1][1],pos[1][2] = translateToScreen(0+0.25,0-0.25,10)
+	pos[1][3],pos[1][4] = translateToScreen(0+0.25,0-0.25,-10)
+	pos[2][1],pos[2][2] = translateToScreen(0+0.75,0-0.75,10)
+	pos[2][3],pos[2][4] = translateToScreen(0+0.75,0-0.75,-10)
+	pos[3][1],pos[3][2] = translateToScreen(0-0.25,0+0.25,10)
+	pos[3][3],pos[3][4] = translateToScreen(0-0.25,0+0.25,-10)
+	pos[4][1],pos[4][2] = translateToScreen(0-0.75,0+0.75,10)
+	pos[4][3],pos[4][4] = translateToScreen(0-0.75,0+0.75,-10)
+	pos[5][1],pos[5][2] = translateToScreen(0+1.25,0-1.25,10)
+	pos[5][3],pos[5][4] = translateToScreen(0+1.25,0-1.25,-10)
 
 	love.graphics.line(pos[1])
 	love.graphics.line(pos[2])
@@ -488,12 +501,12 @@ function grid.update()
 
 	love.graphics.setColor(180,0,0)
 	local pos = {{},{},{},{},{},{}}
-	pos[1][1],pos[1][2] = translateToIso(0,-1)
-	pos[2][1],pos[2][2] = translateToIso(1,-1)
-	pos[3][1],pos[3][2] = translateToIso(0,0)
-	pos[4][1],pos[4][2] = translateToIso(1,0)
-	pos[5][1],pos[5][2] = translateToIso(0,1)
-	pos[6][1],pos[6][2] = translateToIso(1,1)
+	pos[1][1],pos[1][2] = translateToScreen(0,-1)
+	pos[2][1],pos[2][2] = translateToScreen(1,-1)
+	pos[3][1],pos[3][2] = translateToScreen(0,0)
+	pos[4][1],pos[4][2] = translateToScreen(1,0)
+	pos[5][1],pos[5][2] = translateToScreen(0,1)
+	pos[6][1],pos[6][2] = translateToScreen(1,1)
 	love.graphics.circle("fill",pos[1][1],pos[1][2],30)
 	love.graphics.circle("fill",pos[2][1],pos[2][2],30)
 	love.graphics.circle("fill",pos[3][1],pos[3][2],30)
@@ -504,10 +517,10 @@ function grid.update()
 
 	love.graphics.setColor(0,100,0)
 	local pos = {{},{},{},{}}
-	pos[1][1],pos[1][2] = translateToIso(0.5,-0.5)
-	pos[2][1],pos[2][2] = translateToIso(1,-1)
-	pos[3][1],pos[3][2] = translateToIso(0.5,0.5)
-	pos[4][1],pos[4][2] = translateToIso(0,1)
+	pos[1][1],pos[1][2] = translateToScreen(0.5,-0.5)
+	pos[2][1],pos[2][2] = translateToScreen(1,-1)
+	pos[3][1],pos[3][2] = translateToScreen(0.5,0.5)
+	pos[4][1],pos[4][2] = translateToScreen(0,1)
 	love.graphics.circle("fill",pos[1][1],pos[1][2],20)
 	love.graphics.circle("fill",pos[2][1],pos[2][2],20)
 	love.graphics.circle("fill",pos[3][1],pos[3][2],20)
@@ -537,14 +550,12 @@ function grid.update()
 	end
 	--]]
 	
+
 	-- Sorting sprites. Note that I sort the sprites in the wrong direction then I go in the reverse of that table and render the sprites. (It shouldn't go in the wrong dirction)
-	collectgarbage("stop")
-	local opegr = collectgarbage("count")
 	if true then
 		local sortedTable = {}
 
 		-- Test code mark inserts the sprites
-		
 		if mouse.beenReleased.left then 
 			local x,y = grid.tilePressedX,grid.tilePressedY
 			local w,h = math.round(grid.mouse.x)-grid.tilePressedX , math.round(grid.mouse.y)-grid.tilePressedY
@@ -588,25 +599,7 @@ function grid.update()
 
 		-- draw a polygon on the covered area, Don't draw outside of this.
 		-- Should be replaced with spritebatch:add or something
-		local function coverPoly(inTable)
-			x,y,w,h = inTable.x , inTable.y ,  inTable.w , inTable.h
-
-			local t = {}
-			t[1], t[2] = translateToIso(x+w+0.5,y+h+0.5)
-			t[3], t[4] = translateToIso(x-0.5,y+h+0.5)
-			t[5], t[6] = translateToIso(x-0.5,y+h+0.5,4)
-			t[7], t[8] = translateToIso(x-0.5,y-0.5,4)
-			t[9], t[10] = translateToIso(x+w+0.5,y-0.5,4)
-			t[11], t[12] = translateToIso(x+w+0.5,y-0.5)
-			love.graphics.polygon("fill",t)
-
-			centerx, centery = translateToIso(x+w+0.5,y+h+0.5,4)
-			love.graphics.setColor(0,0,0)
-			love.graphics.line(centerx, centery , translateToIso(x+w+0.5,y-0.5,4))
-			love.graphics.line(centerx, centery , translateToIso(x-0.5,y+h+0.5,4))
-			love.graphics.line(centerx, centery , translateToIso(x+w+0.5,y+h+0.5,0))
-			love.graphics.polygon("line",t)
-		end
+		
 
 		
 
@@ -619,16 +612,14 @@ function grid.update()
 			for i =  #sortedTable , 1 , -1 do
 				local val = (sortedTable[i]/(#sortedTable))
 				
+				-- Draw sprite
+
 				heart.sethsv((#sortedTable-i)*(300/#sortedTable),1-val+0.2,val+0.2)
 				coverPoly(areaThings[sortedTable[i]],#sortedTable-i)
 				areaThings[sortedTable[i]].recorded = nil
 			end
 		end
-		
 	end
-
-	printv("MB/s: ",((collectgarbage("count")-opegr)/1024)*60)
-	collectgarbage("restart")
 
 
 	grid.blockSize = ui.slider(grid.blockSize , 1300,910,600,150,2,500 )
@@ -701,7 +692,7 @@ end
 
 for x = -5, 6 do
 	for y = -5, 6 do
-		grid.mark(x*7,y*7,3,3)
+		grid.mark(x*6,y*6,3,3)
 	end
 end
 
@@ -807,21 +798,21 @@ end
 function renderTranslateToScreen(x,y)
 	x = x*(grid.blockSizeWidth/2)
 	y = y*(grid.blockSizeWidth/4)
-	x,y = x+960,y+540
+	x,y = x+viewport.width/2,y+viewport.height/2
 	return x,y
 end
 
 function isocircle(x,y,z,s)
 	s = s or 0.3
 	s = s * grid.blockSize
-	local screenX , screenY = translateToIso(x,y,z)
+	local screenX , screenY = translateToScreen(x,y,z)
 	love.graphics.circle("fill",screenX,screenY,s)
 end
 
 function isocircleRender(x,y,z,s)
 	s = s or 0.3
 	s = s * grid.blockSize
-	local screenX , screenY = renderTranslateToScreen(x,y,z)
+	local screenX , screenY = renderTranslateToScreen(x,y)
 	love.graphics.circle("fill",screenX,screenY,s)
 end
 
@@ -926,7 +917,7 @@ end
 function drawThing()
 	for x , v in pairs(grid.thingDraw) do
 		for y , t in pairs(v) do
-			local screenX, screenY = translateToIso(x,y)
+			local screenX, screenY = translateToScreen(x,y)
 			if t[1] == nil then
 				love.graphics.setColor(0,0,0)
 			else
@@ -955,10 +946,10 @@ end
 
 function drawPolygonTile(x,y,mode)
 	mode = mode or "line"
-	local point1 , point2 = translateToIso(x+0.5,y+0.5)
-	local point3 , point4 = translateToIso(x+0.5,y-0.5)
-	local point5 , point6 = translateToIso(x-0.5,y-0.5)
-	local point7 , point8 = translateToIso(x-0.5,y+0.5)
+	local point1 , point2 = translateToScreen(x+0.5,y+0.5)
+	local point3 , point4 = translateToScreen(x+0.5,y-0.5)
+	local point5 , point6 = translateToScreen(x-0.5,y-0.5)
+	local point7 , point8 = translateToScreen(x-0.5,y+0.5)
 	love.graphics.polygon(mode,point1,point2,point3,point4,point5,point6,point7,point8)
 end
 
@@ -996,7 +987,7 @@ function drawWall()
 		x,y = grid.drawTable[i][1],grid.drawTable[i][2]
 		printo(x,y)
 		local wall = grid.drawOrder[x][y][1]
-		wall.x , wall.y = translateToIso(wall.x,wall.y,wall.z)
+		wall.x , wall.y = translateToScreen(wall.x,wall.y,wall.z)
 		love.graphics.circle("fill",wall.x,wall.y,20)
 
 
@@ -1017,68 +1008,54 @@ function drawWall()
 end
 --]]
 
-
---[[
-Todo
-
-loop over 
-all entries ??? check each on first insert, recheck on remove?
-loop over
-the 2 around position
-loop over
-the 2 relevant walls
-if connect
-	???????????
-
---]]
 function drawFlatTile(x,y,w,h,z,flag) --                                     Do this thing
 	x,y,w,h,z = x or 0,y or 0,w or 1,h or 1, z or 0
 	local point = {}
 	if flag == "dl" then
-		point[1] , point[2] = translateToIso(x+w*0.5-h*0.5 , y-h*0.5 , z)
-		point[3] , point[4] = translateToIso(x+w*0.5+h*0.5 , y+h*0.5 , z)
-		point[5] , point[6] = translateToIso(x-w*0.5 , y+h*0.5 , z)
-		point[7] , point[8] = translateToIso(x-w*0.5 , y-h*0.5 , z)
+		point[1] , point[2] = translateToScreen(x+w*0.5-h*0.5 , y-h*0.5 , z)
+		point[3] , point[4] = translateToScreen(x+w*0.5+h*0.5 , y+h*0.5 , z)
+		point[5] , point[6] = translateToScreen(x-w*0.5 , y+h*0.5 , z)
+		point[7] , point[8] = translateToScreen(x-w*0.5 , y-h*0.5 , z)
 	elseif flag == "dr" then
-		point[1] , point[2] = translateToIso(x+w*0.5 , y+h*0.5+w*0.5 , z)
-		point[3] , point[4] = translateToIso(x+w*0.5 , y-h*0.5 , z)
-		point[5] , point[6] = translateToIso(x-w*0.5 , y-h*0.5 , z)
-		point[7] , point[8] = translateToIso(x-w*0.5 , y+h*0.5-w*0.5 , z)
+		point[1] , point[2] = translateToScreen(x+w*0.5 , y+h*0.5+w*0.5 , z)
+		point[3] , point[4] = translateToScreen(x+w*0.5 , y-h*0.5 , z)
+		point[5] , point[6] = translateToScreen(x-w*0.5 , y-h*0.5 , z)
+		point[7] , point[8] = translateToScreen(x-w*0.5 , y+h*0.5-w*0.5 , z)
 	elseif flag == "ul" then
-		point[1] , point[2] = translateToIso(x+w*0.5,y+h*0.5,z)
-		point[3] , point[4] = translateToIso(x+w*0.5,y-h*0.5,z)
-		point[5] , point[6] = translateToIso(x-w*0.5-h*0.5,y-h*0.5,z)
-		point[7] , point[8] = translateToIso(x-w*0.5+h*0.5,y+h*0.5,z)
+		point[1] , point[2] = translateToScreen(x+w*0.5,y+h*0.5,z)
+		point[3] , point[4] = translateToScreen(x+w*0.5,y-h*0.5,z)
+		point[5] , point[6] = translateToScreen(x-w*0.5-h*0.5,y-h*0.5,z)
+		point[7] , point[8] = translateToScreen(x-w*0.5+h*0.5,y+h*0.5,z)
 	elseif flag == "ur" then
-		point[1] , point[2] = translateToIso(x+w*0.5,y+h*0.5,z)
-		point[3] , point[4] = translateToIso(x+w*0.5,y-h*0.5+w*0.5,z)
-		point[5] , point[6] = translateToIso(x-w*0.5,y-h*0.5-w*0.5,z)
-		point[7] , point[8] = translateToIso(x-w*0.5,y+h*0.5,z)
+		point[1] , point[2] = translateToScreen(x+w*0.5,y+h*0.5,z)
+		point[3] , point[4] = translateToScreen(x+w*0.5,y-h*0.5+w*0.5,z)
+		point[5] , point[6] = translateToScreen(x-w*0.5,y-h*0.5-w*0.5,z)
+		point[7] , point[8] = translateToScreen(x-w*0.5,y+h*0.5,z)
 	elseif flag == "ru" then
-		point[1] , point[2] = translateToIso(x+w*0.5-h*0.5,y+h*0.5,z)
-		point[3] , point[4] = translateToIso(x+w*0.5+h*0.5,y-h*0.5,z)
-		point[5] , point[6] = translateToIso(x-w*0.5,y-h*0.5,z)
-		point[7] , point[8] = translateToIso(x-w*0.5,y+h*0.5,z)
+		point[1] , point[2] = translateToScreen(x+w*0.5-h*0.5,y+h*0.5,z)
+		point[3] , point[4] = translateToScreen(x+w*0.5+h*0.5,y-h*0.5,z)
+		point[5] , point[6] = translateToScreen(x-w*0.5,y-h*0.5,z)
+		point[7] , point[8] = translateToScreen(x-w*0.5,y+h*0.5,z)
 	elseif flag == "rd" then
-		point[1] , point[2] = translateToIso(x+w*0.5,y+h*0.5,z)
-		point[3] , point[4] = translateToIso(x+w*0.5,y-h*0.5-w*0.5,z)
-		point[5] , point[6] = translateToIso(x-w*0.5,y-h*0.5+w*0.5,z)
-		point[7] , point[8] = translateToIso(x-w*0.5,y+h*0.5,z)
+		point[1] , point[2] = translateToScreen(x+w*0.5,y+h*0.5,z)
+		point[3] , point[4] = translateToScreen(x+w*0.5,y-h*0.5-w*0.5,z)
+		point[5] , point[6] = translateToScreen(x-w*0.5,y-h*0.5+w*0.5,z)
+		point[7] , point[8] = translateToScreen(x-w*0.5,y+h*0.5,z)
 	elseif flag == "lu" then
-		point[1] , point[2] = translateToIso(x+w*0.5,y+h*0.5-w*0.5,z)
-		point[3] , point[4] = translateToIso(x+w*0.5,y-h*0.5,z)
-		point[5] , point[6] = translateToIso(x-w*0.5,y-h*0.5,z)
-		point[7] , point[8] = translateToIso(x-w*0.5,y+h*0.5+w*0.5,z)
+		point[1] , point[2] = translateToScreen(x+w*0.5,y+h*0.5-w*0.5,z)
+		point[3] , point[4] = translateToScreen(x+w*0.5,y-h*0.5,z)
+		point[5] , point[6] = translateToScreen(x-w*0.5,y-h*0.5,z)
+		point[7] , point[8] = translateToScreen(x-w*0.5,y+h*0.5+w*0.5,z)
 	elseif flag == "ld" then
-		point[1] , point[2] = translateToIso(x+w*0.5,y+h*0.5,z)
-		point[3] , point[4] = translateToIso(x+w*0.5,y-h*0.5,z)
-		point[5] , point[6] = translateToIso(x-w*0.5+h*0.5,y-h*0.5,z)
-		point[7] , point[8] = translateToIso(x-w*0.5-h*0.5,y+h*0.5,z)
+		point[1] , point[2] = translateToScreen(x+w*0.5,y+h*0.5,z)
+		point[3] , point[4] = translateToScreen(x+w*0.5,y-h*0.5,z)
+		point[5] , point[6] = translateToScreen(x-w*0.5+h*0.5,y-h*0.5,z)
+		point[7] , point[8] = translateToScreen(x-w*0.5-h*0.5,y+h*0.5,z)
 	else
-		point[1] , point[2] = translateToIso(x+w*0.5,y+h*0.5,z)
-		point[3] , point[4] = translateToIso(x+w*0.5,y-h*0.5,z)
-		point[5] , point[6] = translateToIso(x-w*0.5,y-h*0.5,z)
-		point[7] , point[8] = translateToIso(x-w*0.5,y+h*0.5,z)
+		point[1] , point[2] = translateToScreen(x+w*0.5,y+h*0.5,z)
+		point[3] , point[4] = translateToScreen(x+w*0.5,y-h*0.5,z)
+		point[5] , point[6] = translateToScreen(x-w*0.5,y-h*0.5,z)
+		point[7] , point[8] = translateToScreen(x-w*0.5,y+h*0.5,z)
 	end
 	love.graphics.polygon("fill",point)
 	--lineThing(point)
@@ -1097,10 +1074,10 @@ function drawFlatWall(x,y,w,m,h,z)
 	end
 
 	local point = {}
-	point[1] , point[2] = translateToIso(x+ax,y+ay,z)
-	point[3] , point[4] = translateToIso(x+ax,y+ay,h+z)
-	point[5] , point[6] = translateToIso(x-ax,y-ay,h+z)
-	point[7] , point[8] = translateToIso(x-ax,y-ay,z)
+	point[1] , point[2] = translateToScreen(x+ax,y+ay,z)
+	point[3] , point[4] = translateToScreen(x+ax,y+ay,h+z)
+	point[5] , point[6] = translateToScreen(x-ax,y-ay,h+z)
+	point[7] , point[8] = translateToScreen(x-ax,y-ay,z)
 	love.graphics.polygon("line",point) -- FIX: fill for flat wall
 	--lineThing(point)
 end
@@ -1121,7 +1098,7 @@ function drawWallDirect( image, x,y,z,m,r,s)
 
 	x,y,z,s,m = x or 0 , y or 0 , z or 0 , s or 1 , m or 1
 	s = s * (grid.blockSizeWidth/(image:getWidth()*2))
-	local screenX , screenY = translateToIso(x,y,z)
+	local screenX , screenY = translateToScreen(x,y,z)
 
 	love.graphics.draw( image ,screenX , screenY, r , s*m , s, image:getWidth()/2,image:getHeight() - image:getWidth()*0.25 )
 	
@@ -1131,29 +1108,18 @@ end
 function drawTileDirect( image, x,y,z,r,s)
 	x,y,z,s = x or 0 , y or 0 , z or 0 , s or 1
 	s = s * (grid.blockSizeWidth/image:getWidth())
-	local screenX , screenY = translateToIso(x,y,z)
+	local screenX , screenY = translateToScreen(x,y,z)
 
 	love.graphics.draw( image ,screenX , screenY, r , s , s, image:getWidth()/2,image:getHeight()/2)
 	
 end
 
 
--- Figure out a good tile resolution  
-
-function translateToIso___OLD(x,y,z)
-	z = z or 0
-	local pos = v2.new(x,y)
-	pos = v2.newAngle(pos:angle()+math.pi/4 , pos:length() )
-	pos.x = pos.x * 2
-	pos = pos * grid.blockSize
-	pos.x , pos.y = pos.x+960 , pos.y +540 - z * grid.blockSize * math.sqrt(2)
-	return pos.x , pos.y
-end
-
-function translateToIso(x,y,z)
+function translateToScreen(x,y,z)
 	z = z or 0
 	assert(type(x) == "number", "first argument (x) is not a number")
 	assert(type(y) == "number", "second argument (y) is not a number")
+	assert(type(z) == "number", "thrid argument (z) is not a number")
 
 	local angle = math.atan2(y,x)+math.pi/4
     if angle < 0 then angle = angle +math.pi*2 end
@@ -1162,13 +1128,17 @@ function translateToIso(x,y,z)
     x,y = math.cos(angle)*length , math.sin(angle)*length
 
 	x,y = x*2*grid.blockSize, y*grid.blockSize
-	x,y = x+960,y+540- z*grid.blockSize*math.sqrt(2)
+	x,y = x+viewport.width/2,y+viewport.height/2- z*grid.blockSize*math.sqrt(2)
 	return x , y
 end
 
-function translateToScreen(x,y)
-	x = x - 960
-	y = y - 540
+function translateToIso(x,y) -- add in (iso) Z variable so you can select floor level?
+	assert(type(x) == "number", "first argument (x) is not a number")
+	assert(type(y) == "number", "second argument (y) is not a number")
+
+
+	x = x - viewport.width/2
+	y = y - viewport.height/2
 
 	x = x * 0.5
 
