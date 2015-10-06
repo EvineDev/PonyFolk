@@ -79,6 +79,7 @@ function heart.require()
 	heart.hotLoad("ui.lua")
 	heart.hotLoad("mouse.lua")
 
+	heart.hotLoad("tile.lua")
 	heart.hotLoad("grid.lua")
 	heart.hotLoad("asset.lua")
 	heart.hotLoad("path.lua")

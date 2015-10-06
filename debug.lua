@@ -190,7 +190,7 @@ function heart.debug.update()
 		end
 
 		love.graphics.setFont(heart.font)
-		love.graphics.print("Task Curently:\nCleaning up code",150,120)		
+		love.graphics.print("Task Curently:\nMaster grid",150,120)		
 
 		heart.debug.drawCalls = love.graphics.getStats().drawcalls - heart.debug.drawCalls
 		love.graphics.pop()

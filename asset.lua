@@ -1,6 +1,13 @@
 asset = asset or {}
 
 
+renderCanvas = love.graphics.newCanvas(256,256)
+renderImage = love.graphics.newImage(renderCanvas:getImageData())
+renderImage:setMipmapFilter()
+--renderCanvas:setMipmapFilter()
+
+
+
 if not love.filesystem.exists("asset") then
 	love.filesystem.createDirectory("asset")
 end
