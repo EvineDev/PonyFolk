@@ -81,6 +81,7 @@ function heart.require()
 
 	heart.hotLoad("grid.lua")
 	heart.hotLoad("asset.lua")
+	heart.hotLoad("path.lua")
 end
 function heart.load(argument)
 
