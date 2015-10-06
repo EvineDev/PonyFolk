@@ -10,4 +10,4 @@ for x = 1, tile.width do
 	end
 end
 
---tile[0][5].collision = 0xf -- Change the tile collision to all walls.
+--tile[1][5].collision = 0xf -- Change the tile collision to all walls.
