@@ -15,6 +15,7 @@ end
 
 heart.debug.printValue = heart.debug.printValue or {}
 
+
 function heart.debug.load()
 	if love._os == "Windows" then
 		heart.debug.font = love.graphics.newFont(12)
@@ -65,8 +66,8 @@ function heart.debug.keypressed(key,isHeld)
 			_toSleep = not _toSleep
 		end
 	end
-	
 end
+
 
 function heart.debug.keyreleased(key)
 	if key == "d" then -- Disable for release ----------------------------------
@@ -78,6 +79,7 @@ function heart.debug.keyreleased(key)
 		end
 	end
 end
+
 
 function heart.debug.update()
 	
@@ -229,6 +231,7 @@ if true then
 	end
 end
 
+
 function printv(...)
 	local vararg = {...}
 	local varargLength = select("#" , ...)
@@ -253,6 +256,7 @@ function printv(...)
 	end
 end
 
+
 function printv__OLD(...)
 	assert(select("#" , ...) == 2,"printv only take 2 arguments\nThere is "..select("#" , ...).." Arguments")
 	local key , value = ...
@@ -263,9 +267,11 @@ function printv__OLD(...)
 	end
 end
 
+
 function printvR__OLD(key) -- Remove a printv variable.
 	heart.debug.valueOutput[key] = nil
 end
+
 
 function printo(...) -- print once (only on load)
 	if _Loaded then print(...) end

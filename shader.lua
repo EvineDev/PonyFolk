@@ -13,6 +13,7 @@ for i = 1, #shader.file do
 	end
 end
 
+
 local function loadShader( fileName , index )
 	local fileTemp, err = love.filesystem.read(fileName)
 	assert(fileTemp ~= nil, "Shader must be in a seperate file\n"..err.."\n")
@@ -54,6 +55,7 @@ function shader.new(fileName)
 	}
 end
 
+
 function shader.set(shaderInfo)
 	if shaderInfo == nil then
 		love.graphics.setShader()
@@ -63,6 +65,7 @@ function shader.set(shaderInfo)
 		end
 	end
 end
+
 
 function shader.hotLoad()
 	shader._Loaded = false

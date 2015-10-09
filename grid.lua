@@ -18,6 +18,12 @@ grid.bufferDraw = {}
 
 grid.mouse = v2.new()
 
+grid.tilePressedX = 0
+grid.tilePressedY = 0
+
+local areaMarked = {}
+local areaThings = {}
+
 --grid.blockSizeWidth = 1360
 --grid.blockSize = 480.8326112
 --Tile width  = 1360
@@ -65,19 +71,22 @@ function grid.mouseupdate()
 	grid.mouse.x , grid.mouse.y = translateToIso(mouse.x,mouse.y)
 end
 
-grid.tilePressedX = 0
-grid.tilePressedY = 0
+
 function grid.mousepressed(button)
 	grid.tilePressedX = math.round(grid.mouse.x)
 	grid.tilePressedY = math.round(grid.mouse.y)
 end
 
+
 local function compareKey(a,b,key)
 	return a[key] < b[key]
 end
+
+
 local function compareBufferZlevel(a,b)
 	return compareKey(a,b,"bufferZlevel")
 end
+
 
 local function coverPoly(inTable)
 	x,y,w,h = inTable.x , inTable.y ,  inTable.w , inTable.h
@@ -100,20 +109,7 @@ local function coverPoly(inTable)
 end
 
 
-local areaMarked = {}
-local areaThings = {}
-
-
-
-function grid.update()
-
-	
-
-	
-
-
-
-	
+function grid.update()	
 	if false then
 		for x = -grid.size/2 + 0.5 , grid.size/2-0.5 do
 			grid.block[x] = {}
@@ -607,9 +603,6 @@ function grid.update()
 
 		-- draw a polygon on the covered area, Don't draw outside of this.
 		-- Should be replaced with spritebatch:add or something
-		
-
-		
 
 		
 		if true then
@@ -630,7 +623,6 @@ function grid.update()
 		end
 		
 	end
-
 
 	grid.blockSize = ui.slider(grid.blockSize , 1300,910,600,150,2,500 )
 	grid.blockSizeWidth = grid.blockSize*(math.sqrt(2)*2)
@@ -689,6 +681,7 @@ function grid.mark(x,y,w,h) -- 0 based: w,h?
 		table.insert(tile[x-j][y-j].objectMark , where)
 	end
 end
+
 
 function insert2d(tableTo,x,y,thing)
 	assert(type(tableTo) == "table","Trying to index on non table")
@@ -808,12 +801,14 @@ end
 
 --]]
 
+
 function renderTranslateToScreen(x,y)
 	x = x*(grid.blockSizeWidth/2)
 	y = y*(grid.blockSizeWidth/4)
 	x,y = x+viewport.width/2,y+viewport.height/2
 	return x,y
 end
+
 
 function isocircle(x,y,z,s)
 	s = s or 0.3
@@ -822,12 +817,14 @@ function isocircle(x,y,z,s)
 	love.graphics.circle("fill",screenX,screenY,s)
 end
 
+
 function isocircleRender(x,y,z,s)
 	s = s or 0.3
 	s = s * grid.blockSize
 	local screenX , screenY = renderTranslateToScreen(x,y)
 	love.graphics.circle("fill",screenX,screenY,s)
 end
+
 
 function drawWallWraped( image, x,y,z,m,r,s)
 	assert(m == nil or m == 1 or m == -1 , "m ,Mirror value must be nil, 1 or -1")
@@ -861,6 +858,7 @@ function drawWallWraped( image, x,y,z,m,r,s)
 	table.insert(grid.bufferDraw , toInsertInTable)
 end
 
+
 function drawTileWraped( image,x,y,z,r,s) -- Figure out rectangle shapes -- Mirror shapes -s ??
 	x,y,z,r,s = x or 0 , y or 0 , z or 0 , r or 0 , s or 1
 
@@ -882,8 +880,6 @@ function drawTileWraped( image,x,y,z,r,s) -- Figure out rectangle shapes -- Mirr
 
 	table.insert(grid.bufferDraw , toInsertInTable)
 end
-
-
 
 
 
@@ -948,6 +944,7 @@ end
 
 --]]
 
+
 function drawAndInk(x,y,color)
 	--if  math.abs(x) + math.abs(y) < grid.outline.width and y + x < grid.outline.height and y + x > -grid.outline.height or math.abs(x) + math.abs(y) < grid.outline.height and y - x < grid.outline.width and y - x > -grid.outline.width then
 		color = color +1
@@ -957,6 +954,7 @@ function drawAndInk(x,y,color)
 	return color
 end
 
+
 function drawPolygonTile(x,y,mode)
 	mode = mode or "line"
 	local point1 , point2 = translateToScreen(x+0.5,y+0.5)
@@ -965,8 +963,6 @@ function drawPolygonTile(x,y,mode)
 	local point7 , point8 = translateToScreen(x-0.5,y+0.5)
 	love.graphics.polygon(mode,point1,point2,point3,point4,point5,point6,point7,point8)
 end
-
-
 
 
 --[[
@@ -1021,7 +1017,8 @@ function drawWall()
 end
 --]]
 
-function drawFlatTile(x,y,w,h,z,flag) --                                     Do this thing
+
+function drawFlatTile(x,y,w,h,z,flag) -- Do this thing
 	x,y,w,h,z = x or 0,y or 0,w or 1,h or 1, z or 0
 	local point = {}
 	if flag == "dl" then
@@ -1095,6 +1092,7 @@ function drawFlatWall(x,y,w,m,h,z)
 	--lineThing(point)
 end
 
+
 function lineThing(point)
 	heart.push("all")
 	love.graphics.setColor(0,0,0)
@@ -1103,7 +1101,6 @@ function lineThing(point)
 	love.graphics.polygon("line",point)
 	heart.pop()
 end
-
 
 
 function drawWallDirect( image, x,y,z,m,r,s)
@@ -1144,6 +1141,7 @@ function translateToScreen(x,y,z)
 	x,y = x+viewport.width/2,y+viewport.height/2- z*grid.blockSize*math.sqrt(2)
 	return x , y
 end
+
 
 function translateToIso(x,y) -- add in (iso) Z variable so you can select floor level?
 	assert(type(x) == "number", "first argument (x) is not a number")

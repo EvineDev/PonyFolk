@@ -53,10 +53,9 @@ do -- Default
 		printv("Lua memory MB",math.floor(collectgarbage("count")/1024*1000)/1000)	
 	end
 end
+
 -- Requireing a new file causes loads a frame late. Thus unessasery error on load
 function heart.require()
-
-	
 	shader.hotLoad()
 
 	_Loaded = false
@@ -85,8 +84,9 @@ function heart.require()
 	heart.hotLoad("asset.lua")
 	heart.hotLoad("path.lua")
 end
-function heart.load(argument)
 
+
+function heart.load(argument)
 	--love.mouse.setVisible(false)
 	love.graphics.setBackgroundColor(22,17,15)
 	love.keyboard.setKeyRepeat(true)
@@ -97,19 +97,26 @@ function heart.load(argument)
 	heart.debug.load()
 	viewport.load()
 end
+
+
 function love.quit()
 	asset.quit()
 end
+
+
 function love.keypressed(key,isRepeat)
 	if isRepeat == false then
 		heart.debug.keypressed(key)
 		window.keypressed(key)
 	end
 end
+
+
 function love.keyreleased(key)
 	heart.debug.keyreleased(key)
 	window.keyreleased(key)
 end
+
 
 function love.mousepressed(x , y , button)
 	heart.debug.mousepressed(x , y , button)
@@ -118,11 +125,13 @@ function love.mousepressed(x , y , button)
 	grid.mousepressed(button)
 	
 end
-function love.mousereleased(x,y,button)
 
+
+function love.mousereleased(x,y,button)
 	mouse.released(button)
 	--asset.mousereleased(button)
 end
+
 
 function heart.update()
 
@@ -190,6 +199,7 @@ do  --Default
 		end
 
 	end
+
 	function heart.hotLoadHandler(msg)
 		print("\nTime: ".._TimeF..", Execute Load Error: \n"..msg.."\n"..debug.traceback().."\n\n".."Unresolved Push Error: "..heart.pushSAFETY.."\n")
 		while heart.pushSAFETY > 0 do

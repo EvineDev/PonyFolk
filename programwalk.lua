@@ -2,6 +2,8 @@ local fileout = love.filesystem.newFile("programwalkout.txt","w")
 
 programwalk = {}
 local toPrint = false
+
+
 function programwalk.start(outputMode)
 	if outputMode == "print" then
 		toPrint = true
@@ -9,10 +11,12 @@ function programwalk.start(outputMode)
 	debug.sethook(lineDebugFunction , "l")
 end
 
+
 function programwalk.stop()
 	debug.sethook()
 	fileout:close()
 end
+
 
 local function write(...) -- Only 2 arguments
 	if not toPrint then
@@ -27,6 +31,8 @@ local function write(...) -- Only 2 arguments
 		print(...)
 	end
 end
+
+
 function lineDebugFunction(stringLine,lineNumber)
 	local skip = false
 	local info = debug.getinfo(2,"S") -- Remove second argument to return all possible info
@@ -51,6 +57,7 @@ function lineDebugFunction(stringLine,lineNumber)
   		write("-----------------------------------------")
   	end
 end
+
 
 function readLine(lineNumber,fileName)
 	local i = 1

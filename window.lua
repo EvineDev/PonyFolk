@@ -54,7 +54,6 @@ function window.start()
 end
 
 
-
 function window.keypressed(key)
 	if key == "q" then
 		local w , h , s = love.window.getMode()
@@ -72,6 +71,7 @@ function window.keypressed(key)
 		keyboard.TimeSincePressedTheF = love.timer.getTime()
 	end
 end
+
 
 function window.keyreleased(key)
 	if key == "f" then

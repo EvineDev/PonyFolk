@@ -44,9 +44,11 @@ typedef struct ImageData_Pixel
 
 local pixelptr = ffi.typeof("ImageData_Pixel *")
 
+
 local function inside(x, y, w, h)
 	return x >= 0 and x < w and y >= 0 and y < h
 end
+
 
 local imagedata_mt
 if debug then
@@ -63,6 +65,7 @@ local _getDimensions = imagedata_mt.__index.getDimensions
 -- Uses weak keys so the ImageData objects can still be GC'd properly.
 local id_registry = {__mode = "k"}
 
+
 function id_registry:__index(imagedata)
 	local width, height = _getDimensions(imagedata)
 	local pointer = ffi.cast(pixelptr, imagedata:getPointer())
@@ -70,6 +73,7 @@ function id_registry:__index(imagedata)
 	self[imagedata] = p
 	return p
 end
+
 
 setmetatable(id_registry, id_registry)
 

@@ -301,8 +301,6 @@ function heart.graphics.newPSD(fileName,flag)
 
 
 
-
-
 	artal:ink("channelCompression",2)
 	assert(artal.channelCompression == 1 , "image compression type is unsupported")
 
@@ -460,7 +458,6 @@ function heart.graphics.newPSD(fileName,flag)
 		end
 		return layer
 	end
-
 	
 	local POS = 1
 	local currentTable = imageTable
@@ -492,9 +489,6 @@ function heart.graphics.newPSD(fileName,flag)
 				POS = POS + 1
 			end
 		end
-
-
-		
 	end
 	imageTable.layers = POS - 1
 

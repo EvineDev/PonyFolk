@@ -8,6 +8,7 @@ blendMode.screen = blendMode.screen or shader.new("blendmode/screen.glsl")
 local AJi = AJi or love.graphics.newImage("blendmode/applejackbase.png")
 local AJm = AJm or love.graphics.newImage("blendmode/applejackshade4.png")
 
+
 function heart.graphics.draw(image,mode,x,y)
 	x = x or 0
 	y = y or 0
@@ -22,6 +23,7 @@ function heart.graphics.draw(image,mode,x,y)
 	love.graphics.draw(viewport.fullCanvas)
 	shader.set()
 end
+
 
 function blendModeDrawingsTEST()
 	love.graphics.setColor(255,255,255)

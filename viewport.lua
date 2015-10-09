@@ -11,12 +11,12 @@ end
 
 
 
-
 function viewport.load()
 	viewport.fullCanvas = love.graphics.newCanvas(1920, 1080) -- unhard code this
 	--viewport.halfCanvas = love.graphics.newCanvas(1920/2, 1080/2) -- uncomment this for trilinear filtering
 	love.graphics.setCanvas(viewport.fullCanvas)
 end
+
 
 function viewport.push()
 	love.graphics.setCanvas(viewport.fullCanvas)
@@ -26,14 +26,15 @@ function viewport.push()
 	love.graphics.setColor(255,255,255)
 end
 
+
 function viewport.screenshot()
 	if love.keyboard.isDown("0") then
 		viewport.fullCanvas:getImageData():encode("screenshot.png")
 	end
 end
 
+
 --Bilinear filter
----[[
 function viewport.pop()
 	love.graphics.setColor(255,255,255)
 
@@ -70,7 +71,7 @@ function viewport.pop()
 	
 	love.graphics.setColor(255,255,255)
 end
---]]
+
 
 -- Trilinear filtering -- viewport.halfCanvas must be enabled NOT WORKING
 --[[

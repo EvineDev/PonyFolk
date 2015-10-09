@@ -3,14 +3,18 @@
 --	heart.utility = {}
 --end
 
+heart.pushSAFETY = heart.pushSAFETY  or 0
+
 
 function math.round(value)
 	return math.floor(value+0.5)
 end
 
+
 function math.wrap(value,limit)
 	return value - math.floor(value/limit)*limit
 end
+
 
 function math.clamp(value,limitOne,limitTwo)
 	if limitOne < limitTwo then
@@ -33,6 +37,7 @@ function math.clamp(value,limitOne,limitTwo)
 	return value
 end
 
+
 function math.minAngle(inputValA , inputValB)
 	inputValA = math.wrap(inputValA , math.pi*2)
 	inputValB = math.wrap(inputValB , math.pi*2)
@@ -54,6 +59,7 @@ function math.minAngle(inputValA , inputValB)
 
 	return result
 end
+
 
 function math.dir(value , tolerance)
 	tolerance = tolerance or 0
@@ -83,7 +89,6 @@ end
 -- timer = timer + dt
 -- index = math.wrapIndex( timer , limit )
 -- animation.state[index]
-
 function math.wrapIndex(value,limit)
 	return math.floor(1+math.wrap(value,limit))
 end
@@ -99,10 +104,12 @@ for i = 0 , 1530 do
 end
 --]]
 
+
 function heart.white(alpha)
 	alpha = alpha or 255
 	love.graphics.setColor(255,255,255,alpha)
 end
+
 
 function heart.hsv(h,s,v,a)
 	assert(type(h) == "number" and type(s) == "number" and type(v) == "number" , 
@@ -150,13 +157,16 @@ function heart.hsv(h,s,v,a)
 	--end
 end
 
+
 function heart.sethsv(r,g,b,a)
 	love.graphics.setColor(heart.hsv(r,g,b,a))
 end
 
+
 function heart.normalize(value,min,max)
 	return (value-min)/(max-min)
 end
+
 
 function heart.interpolate(input, range)
 	assert(input ~= nil, "1st argument to interpolate is missing")
@@ -176,38 +186,44 @@ end
 
 
 function heart.circle(x,y,od,id,segments)
-		if id == nil or id <= 0 then
-			love.graphics.circle("fill",x,y,od,segments)
-		else
-			heart.push("all")
-			love.graphics.setLineWidth(od-id)
-			love.graphics.setLineJoin("bevel")
-			love.graphics.circle("line",x,y,(od+id)/2,segments)
-			heart.pop()
-		end
+	if id == nil or id <= 0 then
+		love.graphics.circle("fill",x,y,od,segments)
+	else
+		heart.push("all")
+		love.graphics.setLineWidth(od-id)
+		love.graphics.setLineJoin("bevel")
+		love.graphics.circle("line",x,y,(od+id)/2,segments)
+		heart.pop()
 	end
+end
 
-heart.pushSAFETY = heart.pushSAFETY  or 0
+
 function heart.pushUpdate()
 	printv("Unresolved Push",heart.pushSAFETY)
 	while heart.pushSAFETY > 0 do
 		heart.pop()
 	end
 end
+
+
 function heart.push(...)
 	heart.pushSAFETY = heart.pushSAFETY + 1
 	love.graphics.push(...)
 end
+
+
 function heart.pop()
 	heart.pushSAFETY = heart.pushSAFETY - 1
 	love.graphics.pop()
 end
+
 
 function heart.clearTable(inTable)
 	for k, v in pairs(inTable) do
 		inTable[k] = nil
 	end
 end
+
 
 function heart.clearArray(inTable)
 	for i = 1, #inTable do

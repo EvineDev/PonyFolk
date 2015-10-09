@@ -6,8 +6,6 @@ renderImage = love.graphics.newImage(renderCanvas:getImageData())
 renderImage:setMipmapFilter()
 --renderCanvas:setMipmapFilter()
 
-
-
 if not love.filesystem.exists("asset") then
 	love.filesystem.createDirectory("asset")
 end
@@ -100,6 +98,7 @@ function asset.saveFile(quit)
 	file:close()
 end
 
+
 function asset.quit()
 	asset.saveFile("quit")
 end
@@ -114,11 +113,13 @@ function asset.mousereleased(button)
 	end
 end
 
+
 function removeIndexes(t,countRemaining)
 	for i = countRemaining+1 ,#t do
 		t[i] = nil
 	end
 end
+
 
 function asset.keypressed(key)
 	if key == "s" then
@@ -134,6 +135,7 @@ function asset.keypressed(key)
 	end
 end
 
+
 function catcheImage(fileName)
 	if currentImageName ~= fileName or
 		currentImageDate ~= love.filesystem.getLastModified(fileName) then
@@ -144,6 +146,7 @@ function catcheImage(fileName)
 	end
 	return currentImage
 end
+
 
 function asset.drawCurrent(fileName)
 
@@ -198,9 +201,6 @@ function asset.drawCurrent(fileName)
 end
 
 
-
-
-
 function asset.downFolder(filePath,ink)
 	local fileName = love.filesystem.getDirectoryItems(filePath)
 
@@ -229,6 +229,7 @@ end
 local function color(value,level)
 	love.graphics.setColor(heart.hsv(value,1,1,level))
 end
+
 
 function asset.downFolderCommon(typeFile,item,fileName,ink,valid)
 
@@ -432,6 +433,7 @@ function asset.draw()
 	end
 
 end
+
 
 function asset.polyDraw(x,y,w,h)
 	for xi = 0, w-1 do

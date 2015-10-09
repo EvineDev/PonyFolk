@@ -50,6 +50,7 @@ function ui.graph(tableName , x , y , width , height , rangeMin , rangeMax, expe
 	end
 end
 
+
 function ui.slider(input,x,y,width,height,rangeMin,rangeMax)
 	input = input or 0
 
