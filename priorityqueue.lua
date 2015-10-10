@@ -40,7 +40,7 @@ end
 
 -- Removes and returns the smallest element from the queue based on the method compare.
 function PriorityQueue:remove()
-	object = self.heap[1]
+	local object = self.heap[1]
 	self.heap[1], self.heap[self.size] = self.heap[self.size], nil
 	self.size = self.size - 1
 	self:percolateDown(1)
@@ -58,7 +58,7 @@ function PriorityQueue:percolateUp(index)
 		return
 	end
 	
-	parent = math.floor(index/2)
+	local parent = math.floor(index/2)
 	if self.compare(self.heap[index], self.heap[parent]) < 0 then
 		self.heap[index], self.heap[parent] = self.heap[parent], self.heap[index]
 		self:percolateUp(parent)	
@@ -69,9 +69,9 @@ end
 
 -- Private, don't use directly. It's meant to be called from remove().
 function PriorityQueue:percolateDown(index)
-	left = 2*index
-	right = 2*index+1
-	largest = index
+	local left = 2*index
+	local right = 2*index+1
+	local largest = index
 
 	if left <= self.size and self.compare(self.heap[left], self.heap[largest]) < 0 then
 		largest = left
@@ -89,22 +89,22 @@ end
 -- This function is used to check if the PriorityQueue is correctly implemented. Returns true
 -- if all tests passed and false if any of the tests failed.
 function PriorityQueue.test()
-	fails = 0
+	local fails = 0
 
-	pw = PriorityQueue:new({
+	local pw = PriorityQueue:new({
 		compare = function(left, right)
 		          	return left - right
 		          end
 	})
 
-	data = {8, 5, 3, 5, 7, 4, 1, 9}
-	target = {1, 3, 4, 5, 5, 7, 8, 9}
+	local data = {8, 5, 3, 5, 7, 4, 1, 9}
+	local target = {1, 3, 4, 5, 5, 7, 8, 9}
 
 	for i = 1, #data, 1 do
 		pw:insert(data[i])
 	end
 	
-	value = pw:peek()
+	local value = pw:peek()
 	if value ~= target[1] then
 		print("TestError (PriorityQueue): Expected " .. target[1] .. ", got " .. value)
 		fails = fails + 1
@@ -123,4 +123,4 @@ function PriorityQueue.test()
 	else 
 		return true
 	end
-end 
+end
