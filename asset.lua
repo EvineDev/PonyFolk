@@ -1,9 +1,9 @@
 asset = asset or {}
 
 
-renderCanvas = love.graphics.newCanvas(256,256)
-renderImage = love.graphics.newImage(renderCanvas:getImageData())
-renderImage:setMipmapFilter()
+--renderCanvas = love.graphics.newCanvas(256,256)
+--renderImage = love.graphics.newImage(renderCanvas:getImageData())
+--renderImage:setMipmapFilter()
 --renderCanvas:setMipmapFilter()
 
 if not love.filesystem.exists("asset") then
@@ -136,7 +136,7 @@ function asset.keypressed(key)
 end
 
 
-function catcheImage(fileName)
+function asset.catcheImage(fileName)
 	if currentImageName ~= fileName or
 		currentImageDate ~= love.filesystem.getLastModified(fileName) then
 
@@ -151,7 +151,7 @@ end
 function asset.drawCurrent(fileName)
 
 	
-	local image = catcheImage(fileName) -- This is the fileName
+	local image = asset.catcheImage(fileName) -- This is the fileName
 	
 	if asset.save[fileName] then
 		saveInfo = asset.save[fileName]

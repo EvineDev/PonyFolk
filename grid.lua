@@ -1092,7 +1092,7 @@ function drawFlatWall(x,y,w,m,h,z)
 	--lineThing(point)
 end
 
-
+--[[
 function lineThing(point)
 	heart.push("all")
 	love.graphics.setColor(0,0,0)
@@ -1101,7 +1101,7 @@ function lineThing(point)
 	love.graphics.polygon("line",point)
 	heart.pop()
 end
-
+--]]
 
 function drawWallDirect( image, x,y,z,m,r,s)
 	assert(m == nil or m == 1 or m == -1 , "m ,Mirror value must be nil, 1 or -1")

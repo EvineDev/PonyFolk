@@ -38,6 +38,51 @@ do -- Default
 		heart.init = true
 	end
 
+
+	local _TableApproved =
+	{
+		--Evine approved
+		"ui",
+		"_Loaded",
+		"tile",
+		"dt",
+		"viewport",
+		"memcheck",
+		"keyboard",
+		"asset",
+		"translateToScreen",
+		"translateToIso",
+		"grid",
+		"window",
+		"filter",
+		"mouse",
+		"blendMode",
+		"PSDprintdrawTEST",
+		"blendModeDrawingsTEST",
+
+
+		--Temporary
+		"path",
+		"drawTileWraped",
+		"drawWallWraped",
+		"drawTileDirect",
+		"drawWallDirect",
+		"drawFlatTile",
+		"drawFlatWall",
+		"drawPolygonTile",
+		"renderTranslateToScreen",
+		"drawAndInk",
+		"removeIndexes",
+		"isocircleRender",
+		"isocircle",
+		"insert2d",
+	}
+
+	for i = 1, #_TableApproved do
+		_TableDefault[_TableApproved[i]] = true
+	end
+
+
 	function heart.renderInfo()
 		local stats = love.graphics.getStats( )
 		--printv("Texturememory MB",math.floor(stats.texturememory/1024/1024))
