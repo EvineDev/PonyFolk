@@ -82,6 +82,7 @@ end
 function heart.debug.update()
 	
 
+
 	if _Debug then
 		love.graphics.push("all")
 		heart.debug.drawCalls = love.graphics.getStats().drawcalls
@@ -117,8 +118,10 @@ function heart.debug.update()
 			for i = 60*15, 2 , -1 do
 				heart.timer.avgDT[i] = heart.timer.avgDT[i-1]
 			end
+
 			ui.graph(heart.timer.avgDT , 5 , 5 , love.graphics.getWidth()-10 , 120 , 0 , 0.04 , 0.0167 , 0.0333 )
 		end
+		
 
 		if true then -- print output
 			for i = 1,printLength-10 do

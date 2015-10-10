@@ -65,6 +65,7 @@ function heart.require()
 	heart.hotLoad("debug.lua")
 	-- Require files
 	heart.hotLoad("main.lua")
+	heart.hotLoad("memcheck.lua")
 	heart.hotLoad("shader.lua")
 	heart.hotLoad("utility.lua")
 	heart.hotLoad("loadimage.lua")
@@ -124,6 +125,7 @@ function love.mousereleased(x,y,button)
 end
 
 function heart.update()
+
 	keyboard.update()
 	mouse.update()
 	
@@ -137,8 +139,6 @@ function heart.update()
 	--PSDprintdrawTEST()
 	--mouse.draw()
 
-	grid.mouseupdate()
-
 	grid.update()
 
 	--asset.draw()
@@ -149,6 +149,7 @@ function heart.update()
 
 	viewport.screenshot()
 	viewport.pop()
+
 end
 
 
@@ -223,7 +224,8 @@ do  --Default
 		print("Load Time:",math.floor((love.timer.getTime() - _TimeStart)*1000)/1000)
 		-- Main loop time.
 		while true do
-		-- Process events.
+			-- Process events.
+			
 			mouse.reset()
 			for e,a,b,c,d in love.event.poll() do
 				if e == "quit" then
@@ -237,10 +239,12 @@ do  --Default
 				love.handlers[e](a,b,c,d)
 			end
 			heart.run()
+			
 		end
 	end
 
 	function heart.run()
+		
 		if _toSleep then
 			love.timer.sleep(1)
 		end
@@ -265,10 +269,12 @@ do  --Default
 		else
 			heart.update()
 		end
+
 		love.graphics.origin()
 		heart.pushUpdate()
 
 		heart.debug.update()
+
 		if not _Debug then
 			love.timer.sleep(0.001)
 		end
@@ -283,5 +289,7 @@ do  --Default
 		love.event.pump()
 
 		debug.sethook()
+
+		
 	end
 end

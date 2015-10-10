@@ -107,15 +107,19 @@ local areaThings = {}
 
 function grid.update()
 
+	
+
+	
 
 
 
 	
-
-	for x = -grid.size/2 + 0.5 , grid.size/2-0.5 do
-		grid.block[x] = {}
-		for y = -grid.size/2 + 0.5 , grid.size/2-0.5 do
-			grid.block[x][y] = 0
+	if false then
+		for x = -grid.size/2 + 0.5 , grid.size/2-0.5 do
+			grid.block[x] = {}
+			for y = -grid.size/2 + 0.5 , grid.size/2-0.5 do
+				grid.block[x][y] = 0
+			end
 		end
 	end
 
@@ -131,6 +135,8 @@ function grid.update()
 	love.graphics.setColor(0,0,0)
 	love.graphics.circle("line",0,0,(grid.blockSize*grid.size*0.5)*math.sqrt(2))
 	heart.pop()
+
+	
 	--[[
 	for x = -grid.size/2 + 0.5 , grid.size/2-0.5 do
 		for y = -grid.size/2 + 0.5 , grid.size/2-0.5 do
@@ -358,7 +364,8 @@ function grid.update()
 	end
 	grid.bufferDraw = {}
 	--]]
-
+	
+	--[[
 	local wallThickness = 0.2
 
 	local pos = {}
@@ -370,6 +377,8 @@ function grid.update()
 	posNorm[1] = {4,4.5}
 	posNorm[2] = {5.5,3}
 	local wallHeight = 3.75
+	--]]
+
 --[[
 	-- Proper corner outside
 		love.graphics.setColor(108,52,0)
@@ -551,6 +560,7 @@ function grid.update()
 	--]]
 	
 
+
 	-- Sorting sprites. Note that I sort the sprites in the wrong direction then I go in the reverse of that table and render the sprites. (It shouldn't go in the wrong dirction)
 	if true then
 		local sortedTable = {}
@@ -559,17 +569,15 @@ function grid.update()
 		if mouse.beenReleased.left then 
 			local x,y = grid.tilePressedX,grid.tilePressedY
 			local w,h = math.round(grid.mouse.x)-grid.tilePressedX , math.round(grid.mouse.y)-grid.tilePressedY
-			grid.mark(x,y,w,h)
+			--grid.mark(x,y,w,h)
 		end
 
 		-- Create dependecies.
 		for i = 1, #areaThings do -- Loop over the objects
 			for x = areaThings[i].x, areaThings[i].x+areaThings[i].w  do -- x axis
 				for y = areaThings[i].y, areaThings[i].y+areaThings[i].h do -- y axis
-					local t
-					if areaMarked[x] then -- if areaMarked[x][y] isnt there it will return nil
-						t = areaMarked[x][y]
-					end
+					local t = tile[x][y].objectMark
+
 					
 					if t then
 						if type(areaThings[i].dep) == "table" then
@@ -609,6 +617,7 @@ function grid.update()
 			for i = 1, #areaThings do
 				grid.recursiveInsert(i,sortedTable)
 			end
+			
 			for i =  #sortedTable , 1 , -1 do
 				local val = (sortedTable[i]/(#sortedTable))
 				
@@ -619,6 +628,7 @@ function grid.update()
 				areaThings[sortedTable[i]].recorded = nil
 			end
 		end
+		
 	end
 
 
@@ -662,18 +672,21 @@ function grid.mark(x,y,w,h) -- 0 based: w,h?
 	for i = 1, h+1   do
 		for j = 1, 4 do
 			--isocircle(x-j,y+i-j)
-			insert2d(areaMarked,x-j,y+i-j,where)
+			--insert2d(areaMarked,x-j,y+i-j,where)
+			table.insert(tile[x-j][y+i-j].objectMark , where)
 		end
 	end
 	for i = 1, w+1 do
 		for j = 1, 4 do
 			--isocircle(x+i-j,y-j+offsetY)
-			insert2d(areaMarked,x+i-j,y-j,where)
+			--insert2d(areaMarked,x+i-j,y-j,where)
+			table.insert(tile[x+i-j][y-j].objectMark , where)
 		end
 	end
 	for j = 1, 4 do
 		--isocircle(x-j+offsetX,y-j+offsetY)
-		insert2d(areaMarked,x-j,y-j,where)
+		--insert2d(areaMarked,x-j,y-j,where)
+		table.insert(tile[x-j][y-j].objectMark , where)
 	end
 end
 
@@ -690,9 +703,9 @@ end
 
 
 
-for x = -5, 6 do
-	for y = -5, 6 do
-		grid.mark(x*6,y*6,3,3)
+for x = 1, 5 do
+	for y = 1, 5 do
+		grid.mark(x*3+4,y*3+4,1,1)
 	end
 end
 

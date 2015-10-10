@@ -4,9 +4,9 @@ if ui.init == nil then
 	ui.init = true
 end
 
-
+local concatTable = {}
 function ui.graph(tableName , x , y , width , height , rangeMin , rangeMax, expectedValue1, expectedValue2)
-	local concatTable = {}
+	
 	local tableLength = #tableName
 	
 	-- X axis
@@ -15,6 +15,7 @@ function ui.graph(tableName , x , y , width , height , rangeMin , rangeMax, expe
 	-- Y axis
 	local scale = height / (rangeMax - rangeMin)
 	local strechY = y + height + rangeMin*scale
+
 	if tableLength >= 2 then
 
 		for i = 2 , tableLength*2 , 2 do
@@ -22,6 +23,7 @@ function ui.graph(tableName , x , y , width , height , rangeMin , rangeMax, expe
 			concatTable[i] = (-tableName[i*0.5] * scale) + strechY
 		end
 		love.graphics.line(concatTable)
+		heart.clearArray(concatTable)
 	end
 
 	love.graphics.rectangle("line",x,y,width,height)	
