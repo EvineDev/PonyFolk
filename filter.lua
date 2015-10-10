@@ -1,13 +1,13 @@
 filter = {}
 
-base = base or love.graphics.newImage("filter/base.png") -- -0.468,-0.148
+local base = base or love.graphics.newImage("filter/base.png") -- -0.468,-0.148
 
-AJ = AJ or love.graphics.newImage("blendmode/applejackbase.png")
+local AJ = AJ or love.graphics.newImage("blendmode/applejackbase.png")
 
 filter.filterBC = shader.new("filter/filterBC.glsl")
-brightnessValue = brightnessValue or 0
-contrastValue = contrastValue or 1
-desaturateValue = desaturateValue or 1
+local brightnessValue = brightnessValue or 0
+local contrastValue = contrastValue or 1
+local desaturateValue = desaturateValue or 1
 
 
 function filter.draw()

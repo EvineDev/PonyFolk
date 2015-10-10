@@ -1,10 +1,7 @@
 ui = ui or {}
-if ui.init == nil then
-	love.graphics.setLineJoin("none")
-	ui.init = true
-end
-
 local concatTable = {}
+love.graphics.setLineJoin("none")
+
 function ui.graph(tableName , x , y , width , height , rangeMin , rangeMax, expectedValue1, expectedValue2)
 	
 	local tableLength = #tableName

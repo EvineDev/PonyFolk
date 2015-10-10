@@ -158,7 +158,7 @@ function heart.debug.update()
 		heart.debug.printValue = {}
 
 		love.graphics.setFont(heart.debug.fontSmall)
-		if false then -- Global variables
+		if true then -- Global variables
 			local i = 0
 			for k,v in pairs(_G) do
 				if not _TableDefault[k] then
@@ -194,9 +194,10 @@ function heart.debug.update()
 			love.graphics.setColor(255,200,200)
 		end
 
-		love.graphics.setFont(heart.font)
-		love.graphics.print("Task Curently:\nMaster grid",150,120)		
-
+		if false then
+			love.graphics.setFont(heart.font)
+			love.graphics.print("Task Curently:\nMaster grid",150,120)		
+		end
 		heart.debug.drawCalls = love.graphics.getStats().drawcalls - heart.debug.drawCalls
 		love.graphics.pop()
 	end

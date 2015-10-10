@@ -89,18 +89,18 @@ end
 
 
 local function coverPoly(inTable)
-	x,y,w,h = inTable.x , inTable.y ,  inTable.w , inTable.h
+	local x,y,w,h = inTable.x , inTable.y ,  inTable.w , inTable.h
 
 
-	t1, t2 = translateToScreen(x+w+0.5,y+h+0.5)
-	t3, t4 = translateToScreen(x-0.5,y+h+0.5)
-	t5, t6 = translateToScreen(x-0.5,y+h+0.5,4)
-	t7, t8 = translateToScreen(x-0.5,y-0.5,4)
-	t9, t10 = translateToScreen(x+w+0.5,y-0.5,4)
-	t11, t12 = translateToScreen(x+w+0.5,y-0.5)
+	local t1, t2 = translateToScreen(x+w+0.5,y+h+0.5)
+	local t3, t4 = translateToScreen(x-0.5,y+h+0.5)
+	local t5, t6 = translateToScreen(x-0.5,y+h+0.5,4)
+	local t7, t8 = translateToScreen(x-0.5,y-0.5,4)
+	local t9, t10 = translateToScreen(x+w+0.5,y-0.5,4)
+	local t11, t12 = translateToScreen(x+w+0.5,y-0.5)
 	love.graphics.polygon("fill",t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12)
 
-	centerx, centery = translateToScreen(x+w+0.5,y+h+0.5,4)
+	local centerx, centery = translateToScreen(x+w+0.5,y+h+0.5,4)
 	love.graphics.setColor(0,0,0)
 	love.graphics.line(centerx, centery , translateToScreen(x+w+0.5,y-0.5,4))
 	love.graphics.line(centerx, centery , translateToScreen(x-0.5,y+h+0.5,4))

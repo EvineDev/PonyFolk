@@ -1,7 +1,5 @@
 require "programwalk"
-
 --programwalk.start()
-
 
 do -- Default
 	heart = heart or {}
@@ -53,6 +51,11 @@ do -- Default
 		printv("Lua memory MB",math.floor(collectgarbage("count")/1024*1000)/1000)	
 	end
 end
+--_TableDefault["ui"] = true
+--_TableApproved = {ui }
+
+
+
 
 -- Requireing a new file causes loads a frame late. Thus unessasery error on load
 function heart.require()
@@ -83,7 +86,6 @@ function heart.require()
 	heart.hotLoad("grid.lua")
 	heart.hotLoad("asset.lua")
 	heart.hotLoad("path.lua")
-	heart.hotLoad("priorityqueue.lua")
 end
 
 
