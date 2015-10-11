@@ -80,7 +80,6 @@ function PriorityQueue:new(compare)
 	pw = {}
 	pw.heap = {}
 	pw.size = 0
-	print(compare)
 	pw.compare = (compare or compareDefault)
 	setmetatable(pw, self)
 	self.__index = self
