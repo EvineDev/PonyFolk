@@ -18,7 +18,7 @@ for x = 1, tile.width do
 			entityIndex = 0, -- Where in the entity it belongs
 
 
-			
+
 			objectMark = {},
 			wallLeft = false,
 			wallRight = false,
@@ -89,6 +89,23 @@ function tile.removeWall(ttile, direction)
 end
 
 
+for x=1, tile.width, 1 do
+	tile.addCollision(tile[x][1], tile.NORTH_EAST)
+end
+
+for x=1, tile.width, 1 do
+	tile.addCollision(tile[x][tile.height], tile.SOUTH_WEST)
+end
+
+for y=1, tile.width, 1 do
+	tile.addCollision(tile[1][y], tile.NORTH_WEST)
+end
+
+for y=1, tile.width, 1 do
+	tile.addCollision(tile[tile.width][y], tile.SOUTH_EAST)
+end
+
+
 --Hack
 tilecolworighreiogj = {{2,2},{2,3},{2,4},{2,5},{2,6},{2,7},{3,7},{4,7},{5,7}} -- Path, red is the first tile, purple is the last.
 function repgjwpwe()
@@ -103,3 +120,4 @@ function repgjwpwe()
 	grid.insertWall(4,9,-1)
 end
 if grid then repgjwpwe() end
+
