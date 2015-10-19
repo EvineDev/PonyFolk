@@ -51,17 +51,21 @@ end
 function ui.slider(input,x,y,width,height,rangeMin,rangeMax)
 	input = input or 0
 
+	local mouseX , mouseY = mouse.x , mouse.y
+	if love.graphics.getCanvas() == nil then
+		mouseX , mouseY = love.mouse.getX() , love.mouse.getY()
+	end
 
 	local length = rangeMax - rangeMin
 	local scale = width / length
 
 	
-	if mouse.x > x-20 and
-		mouse.x < x+width+20 and
-		mouse.y > y and
-		mouse.y < y+height then
+	if mouseX > x-20 and
+		mouseX < x+width+20 and
+		mouseY > y and
+		mouseY < y+height then
 		if love.mouse.isDown("l") then
-			input = ((mouse.x+rangeMin*scale)-x)/scale
+			input = ((mouseX+rangeMin*scale)-x)/scale
 		end
 	end
 

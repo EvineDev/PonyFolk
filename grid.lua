@@ -1,5 +1,8 @@
 grid = grid or {}
 
+heart.hotLoad("tile.lua",true) -- clear tile table, Remove for release.
+heart.hotLoad("entity.lua",true)
+
 grid.block = {}
 grid.size = 23 -- Calculate this maybe???
 assert(grid.size/2 ~= math.floor(grid.size/2), "grid.size must be a odd number" )
@@ -7,6 +10,7 @@ assert(grid.size/2 ~= math.floor(grid.size/2), "grid.size must be a odd number" 
 --grid.blockSize = grid.blockSizeWidth/(math.sqrt(2)*2) -- Backsolve from width
 grid.blockSize = grid.blockSize or 8
 grid.blockSizeWidth = grid.blockSizeWidth or grid.blockSize*(math.sqrt(2)*2) -- 100 default
+grid.blockTranslateX, grid.blockTranslateY = 0,-12 --* grid.blockSizeWidth * 0.5
 
 --print(grid.blockSizeWidth)
 
@@ -20,9 +24,6 @@ grid.mouse = v2.new()
 
 grid.tilePressedX = 0
 grid.tilePressedY = 0
-
-local areaMarked = {}
-local areaThings = {}
 
 --grid.blockSizeWidth = 1360
 --grid.blockSize = 480.8326112
@@ -65,13 +66,6 @@ love.graphics.setCanvas()
 --]]
 
 
-
-
-function grid.mouseupdate()
-	grid.mouse.x , grid.mouse.y = translateToIso(mouse.x,mouse.y)
-end
-
-
 function grid.mousepressed(button)
 	grid.tilePressedX = math.round(grid.mouse.x)
 	grid.tilePressedY = math.round(grid.mouse.y)
@@ -109,6 +103,11 @@ local function coverPoly(inTable)
 end
 
 
+function grid.mouseupdate()
+	grid.mouse.x , grid.mouse.y = translateToIso(mouse.x,mouse.y)
+end
+
+
 function grid.update()	
 	if false then
 		for x = -grid.size/2 + 0.5 , grid.size/2-0.5 do
@@ -124,12 +123,12 @@ function grid.update()
 	
 	-- Grid transformation
 	heart.push()
-	love.graphics.translate(viewport.width/2,viewport.height/2)
-	love.graphics.scale(2,1)
-	love.graphics.rotate(math.pi/4)
+	--love.graphics.translate(viewport.width/2,viewport.height/2)
+	--love.graphics.scale(2,1)
+	--love.graphics.rotate(math.pi/4)
 	--Test outline
-	love.graphics.setColor(0,0,0)
-	love.graphics.circle("line",0,0,(grid.blockSize*grid.size*0.5)*math.sqrt(2))
+	--love.graphics.setColor(0,0,0)
+	--love.graphics.circle("line",0,0,(grid.blockSize*grid.size*0.5)*math.sqrt(2))
 	heart.pop()
 
 	
@@ -217,8 +216,8 @@ function grid.update()
 	printo(color)
 	--]]
 
-	---[[ Render x and y alternating
-	if false then
+	--[[ Render x and y alternating
+	if true then
 		local color = 0
 		local ink = grid.size
 		local direction = true
@@ -248,78 +247,99 @@ function grid.update()
 
 	-- Select tile code
 	---[[
-	if false then
+	if true then
 		love.graphics.setColor(255,255,255)
-		drawTileWraped(tilesq.image, math.round(grid.mouse.x),math.round(grid.mouse.y),0)
+		drawTileWraped(grid.tilesq, math.round(grid.mouse.x),math.round(grid.mouse.y),0)
 		if math.abs(grid.mouse.y-math.floor(grid.mouse.y)-0.5) > math.abs(grid.mouse.x-math.floor(grid.mouse.x)-0.5) then
-			drawWallWraped(wallsq.image, math.floor(grid.mouse.x)+0.5,math.round(grid.mouse.y),0,-1)
+			drawWallWraped(grid.wallsq, math.floor(grid.mouse.x)+0.5,math.round(grid.mouse.y),0,-1)
 
 		else
-			drawWallWraped(wallsq.image, math.round(grid.mouse.x),math.floor(grid.mouse.y)+0.5,0,1)
+			drawWallWraped(grid.wallsq, math.round(grid.mouse.x),math.floor(grid.mouse.y)+0.5,0,1)
 		end
 	end
 
 
 
-	--drawTileWraped(tilesq.image, 3,0,0,math.pi*2,1)
+	--drawTileWraped(grid.tilesq, 3,0,0,math.pi*2,1)
 --[[
-	drawWallWraped(wallsq.image, 3,-0.5,0,1,0,1)
+	drawWallWraped(grid.wallsq, 3,-0.5,0,1,0,1)
 
 	
-	--drawTileWraped(tilesq.image, 1,1)
-	--drawTileWraped(tilesq.image, 2,1)
-	--drawTileWraped(tilesq.image, 3,1)
-	--drawTileWraped(tilesq.image, 1,2)
-	--drawTileWraped(tilesq.image, 2,2)
-	--drawTileWraped(tilesq.image, 3,2)
-	--drawTileWraped(tilesq.image, 1,3)
-	--drawTileWraped(tilesq.image, 2,3)
-	--drawTileWraped(tilesq.image, 3,3)
+	--drawTileWraped(grid.tilesq, 1,1)
+	--drawTileWraped(grid.tilesq, 2,1)
+	--drawTileWraped(grid.tilesq, 3,1)
+	--drawTileWraped(grid.tilesq, 1,2)
+	--drawTileWraped(grid.tilesq, 2,2)
+	--drawTileWraped(grid.tilesq, 3,2)
+	--drawTileWraped(grid.tilesq, 1,3)
+	--drawTileWraped(grid.tilesq, 2,3)
+	--drawTileWraped(grid.tilesq, 3,3)
 
-	drawWallWraped(wallsq.image, 3.5,0,0,-1)
-	drawWallWraped(wallsq.image, 3.5,1,0,-1)
-	drawWallWraped(wallsq.image, 3.5,2,0,-1)
-	drawWallWraped(wallsq.image, 3.5,3,0,-1)
+	drawWallWraped(grid.wallsq, 3.5,0,0,-1)
+	drawWallWraped(grid.wallsq, 3.5,1,0,-1)
+	drawWallWraped(grid.wallsq, 3.5,2,0,-1)
+	drawWallWraped(grid.wallsq, 3.5,3,0,-1)
 
-	drawWallWraped(wallsq.image, 0, 3.5,0,1)
-	drawWallWraped(wallsq.image, 1, 3.5,0,1)
+	drawWallWraped(grid.wallsq, 0, 3.5,0,1)
+	drawWallWraped(grid.wallsq, 1, 3.5,0,1)
 	
-	drawWallWraped(wallsq.image, 3, 3.5,0,1)
+	drawWallWraped(grid.wallsq, 3, 3.5,0,1)
 
-	--drawTileWraped(tilesq.image, 2)
-	drawWallWraped(wallsq.image, 2,-0.5)
-	--drawTileWraped(tilesq.image, 1)
-	drawWallWraped(wallsq.image, 1,-0.5)
-	--drawTileWraped(tilesq.image, 0)
-	drawWallWraped(wallsq.image,0,-0.5)
+	--drawTileWraped(grid.tilesq, 2)
+	drawWallWraped(grid.wallsq, 2,-0.5)
+	--drawTileWraped(grid.tilesq, 1)
+	drawWallWraped(grid.wallsq, 1,-0.5)
+	--drawTileWraped(grid.tilesq, 0)
+	drawWallWraped(grid.wallsq,0,-0.5)
 	
-	drawWallWraped(wallsq.image,-0.5,0,0,-1)
-	drawWallWraped(wallsq.image, -0.5,1,0,-1)
-	--drawTileWraped(tilesq.image, 0,1)
-	drawWallWraped(wallsq.image, -0.5,2,0,-1)
-	--drawTileWraped(tilesq.image, 0,2)
-	drawWallWraped(wallsq.image, -0.5,3,0,-1)
-	--drawTileWraped(tilesq.image, 0,3)
+	drawWallWraped(grid.wallsq,-0.5,0,0,-1)
+	drawWallWraped(grid.wallsq, -0.5,1,0,-1)
+	--drawTileWraped(grid.tilesq, 0,1)
+	drawWallWraped(grid.wallsq, -0.5,2,0,-1)
+	--drawTileWraped(grid.tilesq, 0,2)
+	drawWallWraped(grid.wallsq, -0.5,3,0,-1)
+	--drawTileWraped(grid.tilesq, 0,3)
 
 
-	--drawWallWraped(wallsq.image, 1+2, 3.6,0,1)
+	--drawWallWraped(grid.wallsq, 1+2, 3.6,0,1)
 	
 
-	--drawWallWraped(wallsq.image, 3.6, 1+2,0,-1)
-	--drawTileWraped(tilesq.image,4,2,0)
-	--drawTileWraped(tilesq.image,3,2,0)
+	--drawWallWraped(grid.wallsq, 3.6, 1+2,0,-1)
+	--drawTileWraped(grid.tilesq,4,2,0)
+	--drawTileWraped(grid.tilesq,3,2,0)
 
-	--drawWallWraped(wallsq.image, 2.5, 3.5,0,-1,0,1)	
-	--drawTileWraped(tilesq.image,2,4,0)
-	--drawTileWraped(tilesq.image,3,3,0)
+	--drawWallWraped(grid.wallsq, 2.5, 3.5,0,-1,0,1)	
+	--drawTileWraped(grid.tilesq,2,4,0)
+	--drawTileWraped(grid.tilesq,3,3,0)
 
 	--drawTileDirect(tile.image, 2,0,0,0,1)
 	--drawWallDirect(wall.image, 2,-0.5,0,0,1,1)
 --]]
 
+	
+	
+	
+
+	-- Render from tile code
+	if true then
+		local color = 0
+		for x = 1 , tile.width * 0.2 do
+			for y = 1 , tile.height * 0.2 do
+				color = drawAndInk(x,y,color)
+				if tile[x][y].wallRight then
+					drawWallWraped(grid.wallsq,x+0.5,y,0,-1)
+				end
+				if tile[x][y].wallLeft then
+					drawWallWraped(grid.wallsq,x,y+0.5,0,1)
+				end
+			end
+		end
+	end
+
+
 	-- Render stuff
-	--[[
-	if false then
+	---[[
+	if true then
 	table.sort(grid.bufferDraw,compareBufferZlevel)
 		local i = 1
 		while i <= #grid.bufferDraw do 
@@ -560,7 +580,6 @@ function grid.update()
 	-- Sorting sprites. Note that I sort the sprites in the wrong direction then I go in the reverse of that table and render the sprites. (It shouldn't go in the wrong dirction)
 	if true then
 		local sortedTable = {}
-
 		-- Test code mark inserts the sprites
 		if mouse.beenReleased.left then 
 			local x,y = grid.tilePressedX,grid.tilePressedY
@@ -569,27 +588,27 @@ function grid.update()
 		end
 
 		-- Create dependecies.
-		for i = 1, #areaThings do -- Loop over the objects
-			for x = areaThings[i].x, areaThings[i].x+areaThings[i].w  do -- x axis
-				for y = areaThings[i].y, areaThings[i].y+areaThings[i].h do -- y axis
+		for i = 1, #entity do -- Loop over the objects
+			for x = entity[i].x, entity[i].x+entity[i].w  do -- x axis
+				for y = entity[i].y, entity[i].y+entity[i].h do -- y axis
 					local t = tile[x][y].objectMark
 
 					
 					if t then
-						if type(areaThings[i].dep) == "table" then
+						if type(entity[i].dep) == "table" then
 							-- Compare the elements returned by checkmarked with the elements in the table.
 							-- Check if it's faster to reverse the j or g loop
 							for j = 1, #t do
-								for g = 1, #areaThings[i].dep do
-									if areaThings[i].dep[g] == t[j] then
+								for g = 1, #entity[i].dep do
+									if entity[i].dep[g] == t[j] then
 										goto foundInTable -- faster?? No variables initalized
 									end
 								end
-								table.insert((areaThings[i].dep),t[j])
+								table.insert((entity[i].dep),t[j])
 								::foundInTable::
 							end
 						else
-							areaThings[i].dep = t
+							entity[i].dep = t
 						end
 					end
 					love.graphics.setColor(0,255,0)
@@ -598,16 +617,15 @@ function grid.update()
 			end
 		end
 
-		-- areaThings[i].dep is either a table or nil depending on if it overlap something.
-		-- Indexes in areaThings[i].dep table is where in areaThings[index] the dependencies lie.
+		-- entity[i].dep is either a table or nil depending on if it overlap something.
+		-- Indexes in entity[i].dep table is where in entity[index] the dependencies lie.
 
 		-- draw a polygon on the covered area, Don't draw outside of this.
 		-- Should be replaced with spritebatch:add or something
 
 		
 		if true then
-			
-			for i = 1, #areaThings do
+			for i = 1, #entity do
 				grid.recursiveInsert(i,sortedTable)
 			end
 			
@@ -616,9 +634,9 @@ function grid.update()
 				
 				-- Draw sprite
 
-				heart.sethsv((#sortedTable-i)*(300/#sortedTable),1-val+0.2,val+0.2)
-				coverPoly(areaThings[sortedTable[i]],#sortedTable-i)
-				areaThings[sortedTable[i]].recorded = nil
+				heart.sethsv((#sortedTable-i)*(300/#sortedTable), 1-val+0.2, val+0.2)
+				coverPoly(entity[sortedTable[i]],#sortedTable-i)
+				entity[sortedTable[i]].recorded = nil
 			end
 		end
 		
@@ -631,22 +649,50 @@ end
 
 
 function grid.recursiveInsert(i,sortedTable)
-	if not areaThings[i].recorded then
-		if areaThings[i].dep then
-			for j = 1, #areaThings[i].dep do
-				grid.recursiveInsert(areaThings[i].dep[j],sortedTable)
+	if not entity[i].recorded then
+		if entity[i].dep then
+			for j = 1, #entity[i].dep do
+				grid.recursiveInsert(entity[i].dep[j],sortedTable)
 				--printv(i,"::",j)
 			end
 		end
 		table.insert(sortedTable,i)
 		--printv("Q"..i)
 
-		areaThings[i].recorded = true
+		entity[i].recorded = true
 	end
 end
 
 
-function grid.mark(x,y,w,h) -- 0 based: w,h?
+function grid.insertWall(x,y,dir)
+	assert(type(x) == "number", "x is not a number")
+	assert(type(y) == "number", "y is not a number")
+	assert(x > 1 and x <= tile.width-1, "x is not in range")
+	assert(y > 1 and y <= tile.height-1, "y is not in range")
+	assert(dir == 1 or dir == -1, "dir must be 1 or -1")
+
+
+	
+		
+
+
+
+
+	if dir == 1 then
+		tile[x][y].wallLeft = true
+		--drawWallWraped(grid.wallsq,x,y+0.5,0,1)
+	elseif dir == -1 then
+
+		tile[x][y].wallRight = true
+		--drawWallWraped(grid.wallsq,x+0.5,y,0,-1)
+	end
+
+	grid.mark(x,y,0,0)
+end
+
+
+function grid.mark(x,y,w,h) -- 0 based: w,h
+	w,h = w or 0, h or 0
 	if w < 0 then
 		x = x+w
 		w = -w
@@ -656,9 +702,9 @@ function grid.mark(x,y,w,h) -- 0 based: w,h?
 		h = -h
 	end
 
-	local toInsert = {}
-	local where = #areaThings+1
-	table.insert(areaThings,{x=x,y=y,w=w,h=h})
+	--local toInsert = {}
+	local where = #entity+1
+	table.insert(entity,{x=x,y=y,w=w,h=h})
 
 	love.graphics.setColor(200,150,150)
 	for i = 1, h+1   do
@@ -694,13 +740,21 @@ function insert2d(tableTo,x,y,thing)
 	table.insert(tableTo[x][y],thing)
 end
 
-
-
 for x = 1, 5 do
 	for y = 1, 5 do
-		grid.mark(x*3+4,y*3+4,1,1)
+		grid.mark(x*4+10,y*4+10,2,2)
 	end
 end
+grid.insertWall(5,5,1)
+grid.insertWall(6,5,1)
+grid.insertWall(7,5,1)
+grid.insertWall(8,5,1)
+
+--for i = 1, #entity do
+--	print(entity[i].y)
+--end
+
+
 
 --[[
 refrigerator = love.graphics.newImage("Couchbw2.png")
@@ -818,12 +872,14 @@ function isocircle(x,y,z,s)
 end
 
 
+--[[
 function isocircleRender(x,y,z,s)
 	s = s or 0.3
 	s = s * grid.blockSize
 	local screenX , screenY = renderTranslateToScreen(x,y)
 	love.graphics.circle("fill",screenX,screenY,s)
 end
+--]]
 
 
 function drawWallWraped( image, x,y,z,m,r,s)
@@ -1131,14 +1187,20 @@ function translateToScreen(x,y,z)
 	assert(type(y) == "number", "second argument (y) is not a number")
 	assert(type(z) == "number", "thrid argument (z) is not a number")
 
+	x,y = x + grid.blockTranslateX , y - grid.blockTranslateX
+	x,y = x + grid.blockTranslateY , y + grid.blockTranslateY
+
 	local angle = math.atan2(y,x)+math.pi/4
     if angle < 0 then angle = angle +math.pi*2 end
     local length = math.sqrt(x * x + y * y)
 
     x,y = math.cos(angle)*length , math.sin(angle)*length
 
+
+
 	x,y = x*2*grid.blockSize, y*grid.blockSize
 	x,y = x+viewport.width/2,y+viewport.height/2- z*grid.blockSize*math.sqrt(2)
+
 	return x , y
 end
 
@@ -1147,6 +1209,8 @@ function translateToIso(x,y) -- add in (iso) Z variable so you can select floor 
 	assert(type(x) == "number", "first argument (x) is not a number")
 	assert(type(y) == "number", "second argument (y) is not a number")
 
+	x = x - (grid.blockTranslateX * grid.blockSizeWidth) 
+	y = y - (grid.blockTranslateY * grid.blockSizeWidth*0.5)
 
 	x = x - viewport.width/2
 	y = y - viewport.height/2
@@ -1165,6 +1229,9 @@ function translateToIso(x,y) -- add in (iso) Z variable so you can select floor 
 	return x,y
 end
 
+grid.tilesq = love.graphics.newImage("testasset/tilesq.png")
+grid.wallsq = love.graphics.newImage("testasset/wallsq.png")
+
 --[[
 
 tile = {}
@@ -1172,15 +1239,7 @@ tile.image = love.graphics.newImage("tile.png")
 tile.width = tile.image:getWidth()
 tile.height = tile.image:getHeight()
 
-tilesq = {}
-tilesq.image = love.graphics.newImage("tilesq.png")
-tilesq.width = tilesq.image:getWidth()
-tilesq.height = tilesq.image:getHeight()
 
-wallsq = {}
-wallsq.image = love.graphics.newImage("pinkwall.png")
-wallsq.width = wallsq.image:getWidth()
-wallsq.height = wallsq.image:getHeight()
 
 wall = {}
 wall.image = love.graphics.newImage("wall.png")

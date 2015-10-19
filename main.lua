@@ -1,4 +1,4 @@
-require "programwalk"
+--require "programwalk"
 --programwalk.start()
 
 do -- Default
@@ -42,8 +42,9 @@ do -- Default
 	local _TableApproved =
 	{
 		--Evine approved
-		"ui",
 		"_Loaded",
+		"_ERRMSG",
+		"ui",
 		"tile",
 		"dt",
 		"viewport",
@@ -127,6 +128,7 @@ function heart.require()
 	heart.hotLoad("grid.lua")
 	heart.hotLoad("asset.lua")
 	heart.hotLoad("path.lua")
+	heart.hotLoad("entity.lua")
 end
 
 
@@ -181,7 +183,7 @@ function heart.update()
 
 	keyboard.update()
 	mouse.update()
-	
+	grid.mouseupdate()
 
 	viewport.push()
 	--Background Color
@@ -212,10 +214,10 @@ do  --Default
 		_TimeF = math.floor(_Time)
 	end
 
-	function heart.hotLoad(fileName)
+	function heart.hotLoad(fileName, force)
 		assert(love.filesystem.exists(fileName),"File does not exists")
 		local ok , hotData , err
-		if heart.hotLoadNameTable[fileName] ~= love.filesystem.getLastModified(fileName) then
+		if heart.hotLoadNameTable[fileName] ~= love.filesystem.getLastModified(fileName) or force then
 			heart.hotLoadNameTable[fileName] = love.filesystem.getLastModified(fileName)
 			if _Debug then
 				ok , hotData = pcall(love.filesystem.load ,fileName)  -- Load program

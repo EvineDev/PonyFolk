@@ -8,8 +8,12 @@ for x = 1, tile.width do
 	for y = 1, tile.height do
 		tile[x][y] = -- Add stuff in here as needed
 		{
+			entityIndex = 0, -- Where in the entity it belongs
+
 			collision = 0x0,
-			objectMark = {}
+			objectMark = {},
+			wallLeft = false,
+			wallRight = false,
 		}
 	end
 end
