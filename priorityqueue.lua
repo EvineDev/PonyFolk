@@ -94,7 +94,7 @@ function PriorityQueue:insert(object)
 end
 
 -- Removes and returns the smallest element from the queue based on the method compare.
-function PriorityQueue:remove()
+function PriorityQueue:removeMin()
 	local object = self.heap[1]
 	self.heap[1] = self.heap[self.size]
 	self.heap[self.size] = nil
@@ -152,7 +152,7 @@ function PriorityQueue.test()
 	end
 
 	for i = 1, #target, 1 do
-		value = pw:remove()
+		value = pw:removeMin()
 		if value ~= target[i] then
 			print("TestError (PriorityQueue): Expected " .. target[i] .. ", got " .. value)
 			fails = fails + 1
