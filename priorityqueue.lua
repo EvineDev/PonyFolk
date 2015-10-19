@@ -1,28 +1,36 @@
 --[[
 	Priority Queue implemented using binary heap.
-	If you want to use a diffrent compare function, add a new compare function in this file and create a new flag in PriorityQueue:new()
+
+	You can pass your own compare function if you want to use something else than the objects
+	relational operators <= > ==. Like compare using a different field, or prioritize the
+	biggest value rather than the smallest.
+
+	The function prototype should look like this
+		compare(obj1, obj2)
+	and return 
+		- a negative number if obj1 is smaller than obj2
+		- a positive number if obj1 is bigger than obj2
+		- a zero number if obj1 is equal obj2
 	
-	Example of making a PriorityQueue: 
-	pw = PriorityQueue:new() -- lessthan is the default flag
+
+	Example:
+		local compare = function(num1, num2) {
+			return num1 - num2
+		}
+		local pw = PriorityQueue:new(compare)
 ]]
 
 
-local function compareLessThan(obj1, obj2) -- Predeclared function
-	return obj1 - obj2
+-- Simple run test on load
+--[[
+for i = 1, 1000 do
+	PriorityQueue.test()
 end
+]]
+
+PriorityQueue = {}
 
 
--- Removes and returns the smallest element from the queue based on the method compare.
-function PriorityQueue:remove()
-	local object = self.heap[1]
-	self.heap[1] = self.heap[self.size]
-	self.heap[self.size] = nil
-	self.size = self.size - 1
-	self:percolateDown(1)
-	return object
-end
-
--- Private. It's meant to be called from insert().
 local function percolateUp(self, index)
 	if index <= 1 then
 		return
@@ -38,7 +46,6 @@ local function percolateUp(self, index)
 end
 
 
--- Private. It's meant to be called from remove().
 local function percolateDown(self, index)
 	local left = 2*index
 	local right = 2*index+1
@@ -57,57 +64,74 @@ local function percolateDown(self, index)
 	end
 end
 
+-- Default compare function. Uses the objects own relational metamethods: __eq(), __le(), etc...
+local function compareDefault(obj1, obj2)
+	if obj1 < obj2  then
+		return -1
+	elseif obj1 == obj2 then
+		return 0
+	else
+		return 1
+	end
+end
 
 -- PriorityQueue constructor.
-function PriorityQueue:new(flag)
-	-- Always assert user defined input
-	assert(flag == nil or flag == "lessthan", "flag is an invaild value")
-	flag = flag or "lessthan"
-
-	local pw = {}
-	if flag == "lessthan" then
-		pw.compare = compareLessThan
-	end
-	pw.heap = {} -- Inhereting a table means you get a Refrence to the table. Not a copy.
+function PriorityQueue:new(compare)
+	pw = {}
+	pw.heap = {}
 	pw.size = 0
+	pw.compare = (compare or compareDefault)
 	setmetatable(pw, self)
 	self.__index = self
 	return pw
 end
 
-
 -- Adds the object to the priority queue.
 function PriorityQueue:insert(object)
-	-- Always assert user defined input
-	assert(type(object) == "number" , "Object is not a number") 
 	table.insert(self.heap, object)
 	self.size = self.size + 1
 	percolateUp(self, self.size)
 end
 
-
 -- Removes and returns the smallest element from the queue based on the method compare.
-function PriorityQueue:remove()
+function PriorityQueue:removeMin()
 	local object = self.heap[1]
-	self.heap[1], self.heap[self.size] = self.heap[self.size], nil
+	self.heap[1] = self.heap[self.size]
+	self.heap[self.size] = nil
 	self.size = self.size - 1
 	percolateDown(self, 1)
 	return object
 end
 
+-- Removes a specific element from the queue, nil if it doesn't exist.
+function PriorityQueue:remove(object)
+	local obj = nil
+	for i=1, self.size, 1 do
+		if self.heap[i] == object then
+			obj = self.heap[i]
+			self.heap[i] = self.heap[self.size]
+			self.heap[self.size] = nil
+			self.size = self.size - 1
+			percolateDown(self, i)
+		end
+	end
+	return obj
+end
 
 -- Returns the smallest element from the queue based on the method compare without removing it.
 function PriorityQueue:peek()
 	return self.heap[1]
 end
 
-
--- This function is used to check if the PriorityQueue is correctly implemented. Returns true
--- if all tests passed and false if any of the tests failed.
+-- This function is used to check if the PriorityQueue is correctly implemented.
 function PriorityQueue.test()
 	local fails = 0
 
-	local pw = PriorityQueue:new()
+	local compare = function(num1, num2)
+			return num1 - num2
+	end
+
+	local pw = PriorityQueue:new(compare)
 
 	local data = {}
 	local target = {}
@@ -128,7 +152,7 @@ function PriorityQueue.test()
 	end
 
 	for i = 1, #target, 1 do
-		value = pw:remove()
+		value = pw:removeMin()
 		if value ~= target[i] then
 			print("TestError (PriorityQueue): Expected " .. target[i] .. ", got " .. value)
 			fails = fails + 1
@@ -145,14 +169,5 @@ function PriorityQueue.test()
 		fails = fails + 1 
 	end
 
-	-- Just crash, no need to return anything
 	assert(fails == 0 , "There was "..fails.." errors.") 
 end
-
-
--- Simple run test on load
---[[
-for i = 1, 1000 do
-	PriorityQueue.test()
-end
---]]
