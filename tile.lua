@@ -8,10 +8,10 @@ for x = 1, tile.width do
 	for y = 1, tile.height do
 		tile[x][y] = -- Add stuff in here as needed
 		{
-			x = x
-			y = y
+			x = x,
+			y = y,
 			collision = 0x0,
-			objectMark = {}
+			objectMark = {},
 
 			-- Used for path-finding
 			cost = 0,
