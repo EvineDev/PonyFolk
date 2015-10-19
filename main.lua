@@ -114,9 +114,6 @@ function heart.require()
 	heart.hotLoad("utility.lua")
 	heart.hotLoad("loadimage.lua")
 
-	heart.hotLoad("blendmodes.lua")
-	heart.hotLoad("filter.lua")
-
 	heart.hotLoad("window.lua")
 	heart.hotLoad("viewport.lua")
 	heart.hotLoad("keyboard.lua")
@@ -124,11 +121,15 @@ function heart.require()
 	heart.hotLoad("ui.lua")
 	heart.hotLoad("mouse.lua")
 
+	heart.hotLoad("blendmodes.lua")
+	heart.hotLoad("filter.lua")
+
 	heart.hotLoad("tile.lua")
+	heart.hotLoad("entity.lua")
+
 	heart.hotLoad("grid.lua")
 	heart.hotLoad("asset.lua")
-	heart.hotLoad("path.lua")
-	heart.hotLoad("entity.lua")
+	heart.hotLoad("path.lua")	
 end
 
 

@@ -1,7 +1,7 @@
 grid = grid or {}
 
-heart.hotLoad("tile.lua",true) -- clear tile table, Remove for release.
-heart.hotLoad("entity.lua",true)
+--heart.hotLoad("tile.lua",true) -- clear tile table, Remove for release.
+--heart.hotLoad("entity.lua",true)
 
 grid.block = {}
 grid.size = 23 -- Calculate this maybe???
@@ -318,7 +318,11 @@ function grid.update()
 
 	
 	
-	
+	-- HACK
+	for i = 1, #tilecolworighreiogj do
+		heart.sethsv((i-1)*(300/#tilecolworighreiogj),1,1,1)
+		drawFlatTile(tilecolworighreiogj[i][1],tilecolworighreiogj[i][2])
+	end
 
 	-- Render from tile code
 	if true then
@@ -345,7 +349,7 @@ function grid.update()
 		while i <= #grid.bufferDraw do 
 		--while i <= 1+math.wrap(math.floor(_Time*2),#grid.bufferDraw) do -- Show render order.
 
-			love.graphics.setColor(255,255,255)
+			love.graphics.setColor(255,255,255,180)
 			local buffer = grid.bufferDraw[i]
 			local screenX , screenY = translateToScreen(buffer.x,buffer.y,buffer.z)
 			if buffer.tileType == "wrappedWall" then
@@ -635,12 +639,15 @@ function grid.update()
 				-- Draw sprite
 
 				heart.sethsv((#sortedTable-i)*(300/#sortedTable), 1-val+0.2, val+0.2)
-				coverPoly(entity[sortedTable[i]],#sortedTable-i)
+				--coverPoly(entity[sortedTable[i]],#sortedTable-i)
 				entity[sortedTable[i]].recorded = nil
 			end
 		end
 		
 	end
+
+	
+
 
 	grid.blockSize = ui.slider(grid.blockSize , 1300,910,600,150,2,500 )
 	grid.blockSizeWidth = grid.blockSize*(math.sqrt(2)*2)
@@ -682,12 +689,11 @@ function grid.insertWall(x,y,dir)
 		tile[x][y].wallLeft = true
 		--drawWallWraped(grid.wallsq,x,y+0.5,0,1)
 	elseif dir == -1 then
-
 		tile[x][y].wallRight = true
 		--drawWallWraped(grid.wallsq,x+0.5,y,0,-1)
 	end
 
-	grid.mark(x,y,0,0)
+	--grid.mark(x,y,0,0)
 end
 
 
@@ -745,10 +751,7 @@ for x = 1, 5 do
 		grid.mark(x*4+10,y*4+10,2,2)
 	end
 end
-grid.insertWall(5,5,1)
-grid.insertWall(6,5,1)
-grid.insertWall(7,5,1)
-grid.insertWall(8,5,1)
+
 
 --for i = 1, #entity do
 --	print(entity[i].y)
@@ -1247,3 +1250,6 @@ wall.width = wall.image:getWidth()
 wall.height = wall.image:getHeight()
 
 --]]
+
+--HACK
+repgjwpwe()

@@ -1,4 +1,4 @@
-require "bit32"
+--require "bit32"
 
 path = path or {}
 

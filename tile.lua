@@ -44,4 +44,17 @@ function tile.removeCollision(ttile, direction)
 	ttile.collision = bit.band(ttile.collision, bit.bnot(direction))
 end
 
---tile[1][5].collision = 0xf -- Change the tile collision to all walls.
+--Hack
+tilecolworighreiogj = {{2,2},{2,3},{2,4},{2,5},{2,6},{2,7},{3,7},{4,7},{5,7}} -- Path, red is the first tile, purple is the last.
+function repgjwpwe()
+	grid.insertWall(5,5,1)-- (x,y,direction)
+	grid.insertWall(6,5,1)-- These functions will place walls at lower left if the direction argument is 1
+	grid.insertWall(7,5,1)-- and lower right if the argument is -1.
+	grid.insertWall(8,5,1)
+
+	grid.insertWall(4,6,-1)
+	grid.insertWall(4,7,-1)
+	grid.insertWall(4,8,-1)
+	grid.insertWall(4,9,-1)
+end
+if grid then repgjwpwe() end
