@@ -107,7 +107,20 @@ end
 
 
 --Hack
-tilecolworighreiogj = {{2,2},{2,3},{2,4},{2,5},{2,6},{2,7},{3,7},{4,7},{5,7}} -- Path, red is the first tile, purple is the last.
+require "path"
+-- The actual collisions
+tile.addWall(tile[5][5], tile.SOUTH_WEST)
+tile.addWall(tile[6][5], tile.SOUTH_WEST)
+tile.addWall(tile[7][5], tile.SOUTH_WEST)
+tile.addWall(tile[8][5], tile.SOUTH_WEST)
+	
+tile.addWall(tile[4][6], tile.SOUTH_EAST)
+tile.addWall(tile[4][7], tile.SOUTH_EAST)
+tile.addWall(tile[4][8], tile.SOUTH_EAST)
+tile.addWall(tile[4][9], tile.SOUTH_EAST)
+
+tilecolworighreiogj = path.find(2, 2, 5, 7)
+
 function repgjwpwe()
 	grid.insertWall(5,5,1)-- (x,y,direction)
 	grid.insertWall(6,5,1)-- These functions will place walls at lower left if the direction argument is 1
@@ -120,4 +133,5 @@ function repgjwpwe()
 	grid.insertWall(4,9,-1)
 end
 if grid then repgjwpwe() end
+
 

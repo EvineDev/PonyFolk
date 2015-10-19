@@ -1,6 +1,5 @@
 require "bit"
 require "priorityqueue"
-require "tile"
 local Set = require "set"
 
 path = path or {}
@@ -13,7 +12,6 @@ local function updateTile(frontier, explored, prev, t, new_cost)
 	end
 	
 	if not explored:contains(t) then
-		print(new_cost .. " < " .. t.cost)
 		if new_cost < t.cost then
 			t.prev = prev
 			t.cost = new_cost
@@ -62,7 +60,7 @@ function path.find(x0, y0, x1, y1)
 
 	while true do
 		node = frontier:removeMin()
-		--print(node.x .. " || " .. node.y)
+
 		if node == goal or node == nil then
 			break
 		end

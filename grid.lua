@@ -321,7 +321,7 @@ function grid.update()
 	-- HACK
 	for i = 1, #tilecolworighreiogj do
 		heart.sethsv((i-1)*(300/#tilecolworighreiogj),1,1,1)
-		drawFlatTile(tilecolworighreiogj[i][1],tilecolworighreiogj[i][2])
+		drawFlatTile(tilecolworighreiogj[i].x, tilecolworighreiogj[i].y)
 	end
 
 	-- Render from tile code
