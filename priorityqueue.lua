@@ -112,7 +112,7 @@ function PriorityQueue:remove(object)
 			self.heap[i] = self.heap[self.size]
 			self.heap[self.size] = nil
 			self.size = self.size - 1
-			percolateDown(i)
+			percolateDown(self, i)
 		end
 	end
 	return obj
