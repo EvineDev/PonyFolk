@@ -77,7 +77,7 @@ end
 
 -- PriorityQueue constructor.
 function PriorityQueue:new(compare)
-	pw = {}
+	local pw = {}
 	pw.heap = {}
 	pw.size = 0
 	pw.compare = (compare or compareDefault)
