@@ -44,4 +44,48 @@ function tile.removeCollision(ttile, direction)
 	ttile.collision = bit.band(ttile.collision, bit.bnot(direction))
 end
 
+
+function tile.addWall(ttile, direction)
+	tile.addCollision(ttile, direction)
+	local otile = nil
+	if direction == tile.NORTH_WEST then
+		otile = tile[ttile.x-1][ttile.y]
+		tile.addCollision(otile, tile.SOUTH_EAST)
+
+	elseif direction == tile.NORTH_EAST then
+		otile = tile[ttile.x][ttile.y-1]
+		tile.addCollision(otile, tile.SOUTH_WEST)
+
+	elseif direction == tile.SOUTH_WEST then
+		otile = tile[ttile.x][ttile.y+1]
+		tile.addCollision(otile, tile.NORTH_EAST)
+
+	elseif direction == tile.SOUTH_EAST then
+		otile = tile[ttile.x+1][ttile.y]
+		tile.addCollision(otile, tile.NORTH_WEST)
+	end
+end
+
+
+function tile.removeWall(ttile, direction)
+	tile.removeCollision(ttile, direction)
+	local otile = nil
+	if direction == tile.NORTH_WEST then
+		otile = tile[ttile.x-1][ttile.y]
+		tile.removeCollision(otile, tile.SOUTH_EAST)
+
+	elseif direction == tile.NORTH_EAST then
+		otile = tile[ttile.x][ttile.y-1]
+		tile.removeCollision(otile, tile.SOUTH_WEST)
+
+	elseif direction == tile.SOUTH_WEST then
+		otile = tile[ttile.x][ttile.y+1]
+		tile.removeCollision(otile, tile.NORTH_EAST)
+
+	elseif direction == tile.SOUTH_EAST then
+		otile = tile[ttile.x+1][ttile.y]
+		tile.removeCollision(otile, tile.NORTH_WEST)
+	end
+end
+
 --tile[1][5].collision = 0xf -- Change the tile collision to all walls.
