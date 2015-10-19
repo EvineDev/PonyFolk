@@ -103,6 +103,21 @@ function PriorityQueue:remove()
 	return object
 end
 
+-- Removes a specific element from the queue, nil if it doesn't exist.
+function PriorityQueue:remove(object)
+	local obj = nil
+	for i=1, self.size, 1 do
+		if self.heap[i] == object then
+			obj = self.heap[i]
+			self.heap[i] = self.heap[self.size]
+			self.heap[self.size] = nil
+			self.size = self.size - 1
+			percolateDown(i)
+		end
+	end
+	return obj
+end
+
 -- Returns the smallest element from the queue based on the method compare without removing it.
 function PriorityQueue:peek()
 	return self.heap[1]
