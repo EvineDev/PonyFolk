@@ -123,6 +123,20 @@ function PriorityQueue:peek()
 	return self.heap[1]
 end
 
+
+-- Checks if the priority queue contains the object.
+function PriorityQueue:contains(object)
+	local found = false
+	for i=1, self.size, 1 do
+		if self.heap[i] == object then
+			found = true
+			break
+		end
+	end
+	return found
+end
+
+
 -- This function is used to check if the PriorityQueue is correctly implemented.
 function PriorityQueue.test()
 	local fails = 0
