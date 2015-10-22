@@ -46,6 +46,7 @@ do -- Default
 		"_ERRMSG",
 		"ui",
 		"tile",
+		"entity",
 		"dt",
 		"viewport",
 		"memcheck",

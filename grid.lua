@@ -1,7 +1,9 @@
+
+heart.hotLoad("entity.lua",true)
+heart.hotLoad("tile.lua",true) -- clear tile table, Remove for release.
+
 grid = grid or {}
 
---heart.hotLoad("tile.lua",true) -- clear tile table, Remove for release.
---heart.hotLoad("entity.lua",true)
 
 grid.block = {}
 grid.size = 23 -- Calculate this maybe???
@@ -148,7 +150,8 @@ function grid.update()
 	end
 	--]]
 	--Outline Square
-	if true then
+	if false then
+		love.graphics.setColor(0,0,0)
 		love.graphics.rectangle("line",
 			(1920-grid.outline.width*grid.blockSizeWidth)/2,
 			(1080-grid.outline.height*grid.blockSizeWidth*0.5)/2,
@@ -330,10 +333,10 @@ function grid.update()
 		for x = 1 , tile.width * 0.2 do
 			for y = 1 , tile.height * 0.2 do
 				color = drawAndInk(x,y,color)
-				if tile[x][y].wallRight then
+				if tile[x][y].entityWallRight ~= 0 then
 					drawWallWraped(grid.wallsq,x+0.5,y,0,-1)
 				end
-				if tile[x][y].wallLeft then
+				if tile[x][y].entityWallLeft ~= 0 then
 					drawWallWraped(grid.wallsq,x,y+0.5,0,1)
 				end
 			end
@@ -344,7 +347,7 @@ function grid.update()
 	-- Render stuff
 	---[[
 	if true then
-	table.sort(grid.bufferDraw,compareBufferZlevel)
+		table.sort(grid.bufferDraw,compareBufferZlevel)
 		local i = 1
 		while i <= #grid.bufferDraw do 
 		--while i <= 1+math.wrap(math.floor(_Time*2),#grid.bufferDraw) do -- Show render order.
@@ -592,32 +595,36 @@ function grid.update()
 		end
 
 		-- Create dependecies.
-		for i = 1, #entity do -- Loop over the objects
-			for x = entity[i].x, entity[i].x+entity[i].w  do -- x axis
-				for y = entity[i].y, entity[i].y+entity[i].h do -- y axis
-					local t = tile[x][y].objectMark
+		for i = 1, entity.count do -- Loop over the objects
+			if entity[i] ~= nil then
+				for x = entity[i].x, entity[i].x+entity[i].w  do -- x axis
+					for y = entity[i].y, entity[i].y+entity[i].h do -- y axis
+						local t = tile[x][y].objectMark
 
-					
-					if t then
-						if type(entity[i].dep) == "table" then
-							-- Compare the elements returned by checkmarked with the elements in the table.
-							-- Check if it's faster to reverse the j or g loop
-							for j = 1, #t do
-								for g = 1, #entity[i].dep do
-									if entity[i].dep[g] == t[j] then
-										goto foundInTable -- faster?? No variables initalized
+						
+						if t then
+							if type(entity[i].dep) == "table" then
+								-- Compare the elements returned by checkmarked with the elements in the table.
+								-- Check if it's faster to reverse the j or g loop
+								for j = 1, #t do
+									for g = 1, #entity[i].dep do
+										if entity[i].dep[g] == t[j] then
+											goto foundInTable -- faster?? No variables initalized
+										end
 									end
+									table.insert((entity[i].dep),t[j])
+									::foundInTable::
 								end
-								table.insert((entity[i].dep),t[j])
-								::foundInTable::
+							else
+								entity[i].dep = t
 							end
-						else
-							entity[i].dep = t
 						end
+						love.graphics.setColor(0,255,0)
+						--isocircle(x,y)
 					end
-					love.graphics.setColor(0,255,0)
-					--isocircle(x,y)
 				end
+			else
+				print("entity["..i.."] == nil")
 			end
 		end
 
@@ -639,7 +646,7 @@ function grid.update()
 				-- Draw sprite
 
 				heart.sethsv((#sortedTable-i)*(300/#sortedTable), 1-val+0.2, val+0.2)
-				--coverPoly(entity[sortedTable[i]],#sortedTable-i)
+				coverPoly(entity[sortedTable[i]],#sortedTable-i)
 				entity[sortedTable[i]].recorded = nil
 			end
 		end
@@ -656,7 +663,8 @@ end
 
 
 function grid.recursiveInsert(i,sortedTable)
-	if not entity[i].recorded then
+	--printo(i,#entity)
+	if entity[i] ~= nil and not entity[i].recorded then -- Am I sure this is a good solution to just skip if its nil?
 		if entity[i].dep then
 			for j = 1, #entity[i].dep do
 				grid.recursiveInsert(entity[i].dep[j],sortedTable)
@@ -671,34 +679,14 @@ function grid.recursiveInsert(i,sortedTable)
 end
 
 
-function grid.insertWall(x,y,dir)
+function grid.mark(thing,x,y,w,h) -- 0 based: w,h
+	assert(thing == "wallleft" or thing == "wallright" or thing == "object", "Invalid object being passed into grid.mark")
+	w,h = w or 0, h or 0
 	assert(type(x) == "number", "x is not a number")
 	assert(type(y) == "number", "y is not a number")
 	assert(x > 1 and x <= tile.width-1, "x is not in range")
 	assert(y > 1 and y <= tile.height-1, "y is not in range")
-	assert(dir == 1 or dir == -1, "dir must be 1 or -1")
-
-
-	
-		
-
-
-
-
-	if dir == 1 then
-		tile[x][y].wallLeft = true
-		--drawWallWraped(grid.wallsq,x,y+0.5,0,1)
-	elseif dir == -1 then
-		tile[x][y].wallRight = true
-		--drawWallWraped(grid.wallsq,x+0.5,y,0,-1)
-	end
-
-	--grid.mark(x,y,0,0)
-end
-
-
-function grid.mark(x,y,w,h) -- 0 based: w,h
-	w,h = w or 0, h or 0
+	assert(thing == "wallleft" and w==0 and h==0 or thing == "wallright" and w==0 and h==0 or thing == "object", "width or height parameter must be 0,0 for walls grid.mark")
 	if w < 0 then
 		x = x+w
 		w = -w
@@ -708,33 +696,81 @@ function grid.mark(x,y,w,h) -- 0 based: w,h
 		h = -h
 	end
 
-	--local toInsert = {}
-	local where = #entity+1
-	table.insert(entity,{x=x,y=y,w=w,h=h})
+	-- These asserts shouldn't stop the game when it's running. So they need to rewired to give warning instead.
+	if thing == "object" then
+		for i = x, x+w do
+			for j = y, y+h do
+				--print(i,j)
+				assert(tile[i][j].entityIndex == 0,"Object already inserted here")
+				if i < x+w then
+					--print(i,j)
+					assert(tile[i][j].entityWallLeft == 0,"Wall Left is blocking object")
+				end
+				if j < y+h then
+					--print(i,j)
+					assert(tile[i][j].entityWallRight == 0,"Wall Right is blocking object")
+				end
+			end
+		end
+	elseif thing == "wallleft" then
+		assert(tile[x][y].entityWallLeft == 0 , "Wall already inserted here")
+		if tile[x][y].entityIndex ~= 0 and tile[x][y+1].entityIndex == tile[x][y].entityIndex then
+			assert( false ,"Object is blocking wall")
+		end
+	elseif thing == "wallright" then
+		assert(tile[x][y].entityWallRight == 0 , "Wall already inserted here")
+		if tile[x][y].entityIndex ~= 0 and tile[x+1][y].entityIndex == tile[x][y].entityIndex then
+			assert( false ,"Object is blocking wall")
+		end
+	end
 
-	love.graphics.setColor(200,150,150)
-	for i = 1, h+1   do
+	local where = heart.lengthSparse(entity)+1 -- Gets the first available "hole" in entity array.
+	if where ~= #entity+1 then -- Check if the data messes up in this case. #entity+1 does not do what I want on a sparse array.
+		print("---Check Array----",where,#entity+1)
+	end
+	entity.count = math.max(entity.count,where)
+	entity[where] = {x=x,y=y,w=w,h=h} -- Should maybe insert more info here? 
+	
+
+	for i = x, x+w do
+		for j = y, y+h do
+			tile[i][j].entityIndex = where
+		end
+	end 
+
+
+	for i = 1, h+1 do
 		for j = 1, 4 do
-			--isocircle(x-j,y+i-j)
-			--insert2d(areaMarked,x-j,y+i-j,where)
 			table.insert(tile[x-j][y+i-j].objectMark , where)
 		end
 	end
 	for i = 1, w+1 do
 		for j = 1, 4 do
-			--isocircle(x+i-j,y-j+offsetY)
-			--insert2d(areaMarked,x+i-j,y-j,where)
 			table.insert(tile[x+i-j][y-j].objectMark , where)
 		end
 	end
 	for j = 1, 4 do
-		--isocircle(x-j+offsetX,y-j+offsetY)
-		--insert2d(areaMarked,x-j,y-j,where)
 		table.insert(tile[x-j][y-j].objectMark , where)
 	end
 end
 
 
+for x = 1, 5 do
+	for y = 1, 5 do
+		grid.mark("object",x*4+10,y*4+10,2,2)
+	end
+end
+
+grid.mark("object",6,6,2,0)
+
+--grid.mark("object",5,8,0,0)
+
+--for i = 1, #entity do
+--	print(entity[i].y)
+--end
+
+
+--[[
 function insert2d(tableTo,x,y,thing)
 	assert(type(tableTo) == "table","Trying to index on non table")
 	if not tableTo[x] then
@@ -745,19 +781,28 @@ function insert2d(tableTo,x,y,thing)
 	end
 	table.insert(tableTo[x][y],thing)
 end
+--]]
 
-for x = 1, 5 do
-	for y = 1, 5 do
-		grid.mark(x*4+10,y*4+10,2,2)
+--[[
+function grid.insertWall(x,y,dir)
+	assert(type(x) == "number", "x is not a number")
+	assert(type(y) == "number", "y is not a number")
+	assert(x > 1 and x <= tile.width-1, "x is not in range")
+	assert(y > 1 and y <= tile.height-1, "y is not in range")
+	assert(dir == 1 or dir == -1, "dir must be 1 or -1")
+
+
+	if dir == 1 then
+		--drawWallWraped(grid.wallsq,x,y+0.5,0,1)
+		grid.mark("wallleft",x,y,0,0)
+	elseif dir == -1 then
+		--drawWallWraped(grid.wallsq,x+0.5,y,0,-1)
+		grid.mark("wallright",x,y,0,0)
 	end
+
+	
 end
-
-
---for i = 1, #entity do
---	print(entity[i].y)
---end
-
-
+--]]
 
 --[[
 refrigerator = love.graphics.newImage("Couchbw2.png")
@@ -1253,3 +1298,4 @@ wall.height = wall.image:getHeight()
 
 --HACK
 repgjwpwe()
+

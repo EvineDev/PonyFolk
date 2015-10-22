@@ -1,11 +1,10 @@
-require "bit"
 
 tile = {}
 
 tile.width = 200 -- undefinend what these 2 will end up as.
 tile.height = 200
 
-tile.NORTH_WEST = 1
+tile.NORTH_WEST = 1 -- should be 0?
 tile.NORTH_EAST = 2
 tile.SOUTH_WEST = 4
 tile.SOUTH_EAST = 8
@@ -16,12 +15,12 @@ for x = 1, tile.width do
 		tile[x][y] = -- Add stuff in here as needed
 		{
 			entityIndex = 0, -- Where in the entity it belongs
+			entityWallLeft = 0, -- Wall left and right can also stay on the same tile
+			entityWallRight = 0,
 
 
 
 			objectMark = {},
-			wallLeft = false,
-			wallRight = false,
 
 			x = x,
 			y = y,
@@ -109,29 +108,30 @@ end
 --Hack
 require "path"
 -- The actual collisions
-tile.addWall(tile[5][5], tile.SOUTH_WEST)
 tile.addWall(tile[6][5], tile.SOUTH_WEST)
 tile.addWall(tile[7][5], tile.SOUTH_WEST)
 tile.addWall(tile[8][5], tile.SOUTH_WEST)
+tile.addWall(tile[9][5], tile.SOUTH_WEST)
 	
-tile.addWall(tile[4][6], tile.SOUTH_EAST)
-tile.addWall(tile[4][7], tile.SOUTH_EAST)
-tile.addWall(tile[4][8], tile.SOUTH_EAST)
-tile.addWall(tile[4][9], tile.SOUTH_EAST)
+tile.addWall(tile[5][6], tile.SOUTH_EAST)
+tile.addWall(tile[5][7], tile.SOUTH_EAST)
+tile.addWall(tile[5][8], tile.SOUTH_EAST)
+tile.addWall(tile[5][9], tile.SOUTH_EAST)
 
-tilecolworighreiogj = path.find(2, 2, 5, 7)
+tilecolworighreiogj = path.find(2, 2, 6, 6)
 
 function repgjwpwe()
-	grid.insertWall(5,5,1)-- (x,y,direction)
-	grid.insertWall(6,5,1)-- These functions will place walls at lower left if the direction argument is 1
-	grid.insertWall(7,5,1)-- and lower right if the argument is -1.
-	grid.insertWall(8,5,1)
+	-- (x,y,direction)
+	grid.mark("wallleft",6,5)-- These functions will place walls at lower left if the direction argument is 1
+	grid.mark("wallleft",7,5)-- and lower right if the argument is -1.
+	grid.mark("wallleft",8,5)
+	grid.mark("wallleft",9,5)
 
-	grid.insertWall(4,6,-1)
-	grid.insertWall(4,7,-1)
-	grid.insertWall(4,8,-1)
-	grid.insertWall(4,9,-1)
+	grid.mark("wallright",5,6)
+	grid.mark("wallright",5,7)
+	grid.mark("wallright",5,8)
+	grid.mark("wallright",5,9)
 end
-if grid then repgjwpwe() end
+--if grid then repgjwpwe() end
 
 

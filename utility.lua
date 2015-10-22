@@ -105,12 +105,6 @@ end
 --]]
 
 
-function heart.white(alpha)
-	alpha = alpha or 255
-	love.graphics.setColor(255,255,255,alpha)
-end
-
-
 function heart.hsv(h,s,v,a)
 	assert(type(h) == "number" and type(s) == "number" and type(v) == "number" , 
 		"heart.hsv(h,s,v) values is not passed in as numbers")
@@ -229,4 +223,21 @@ function heart.clearArray(inTable)
 	for i = 1, #inTable do
 		inTable[i] = nil
 	end
+end
+
+
+function heart.insertSparse(tableTo,item)
+	local i = 1
+	while tableTo[i] ~= nil do
+		i = i+1
+	end
+	tableTo[i] = item
+end
+
+function heart.lengthSparse(tableTo)
+	local i = 1
+	while tableTo[i] ~= nil do
+		i = i+1
+	end
+	return i-1
 end
