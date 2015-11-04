@@ -241,3 +241,80 @@ function heart.lengthSparse(tableTo)
 	end
 	return i-1
 end
+
+function heart.removeCompact(inTable,index)
+	assert(type(inTable) == "table", "First argument is not a table")
+	assert(type(index) == "number", "Second argument is not a number")
+	assert(#inTable >= index,"Table index was above the vaild range")
+	assert(0 < index,"Table index was below the vaild range")
+	for i = index , #inTable-1 do
+		inTable[i] = inTable[i+1]
+	end
+	inTable[#inTable] = nil
+end
+
+function heart.moveCompact(inTable,indexFrom,indexTo)
+	assert(type(inTable) == "table", "First argument is not a table")
+	assert(type(indexFrom) == "number", "Second argument is not a number")
+	assert(type(indexTo) == "number", "Third argument is not a number")
+	assert(#inTable >= math.max(indexFrom,indexTo),"Table index was above the vaild range")
+	assert(0 < math.min(indexFrom,indexTo),"Table index was below the vaild range")
+
+	local temp = inTable[indexFrom]
+	if indexFrom > indexTo then
+		for i = indexFrom, indexTo +1 ,-1 do
+			--print(i)
+			inTable[i] = inTable[i-1]
+		end
+	elseif indexFrom < indexTo then
+		for i = indexFrom, indexTo do
+			--print(i)
+			inTable[i] = inTable[i+1]
+		end
+	end
+	inTable[indexTo] = temp
+end
+
+
+function heart.rectangleCheck(x,y,w,h,posX,posY)
+	if posX >= x and posX < x+w and posY >= y and posY < y+h then
+		return true
+	else
+		return false
+	end
+end
+
+function heart.alignBox(outerW,outerH,objectW,objectH,typeScale)
+	assert(type(outerW) == "number", "outerW is not a number")
+	assert(type(outerH) == "number", "outerH is not a number")
+	assert(type(objectW) == "number", "objectW is not a number")
+	assert(type(objectH) == "number", "objectH is not a number")
+	typeScale = typeScale or "max"
+	assert(typeScale == "max" or 
+		typeScale == "int" or
+		typeScale == "none",
+		"typeScale is not recognized, 'max','int','none' is vaild")
+
+	local s
+
+	-- Spesial case if the object is 0,0 then return the middle point of the outer box.
+	if objectW == 0 and objectH == 0 then
+		return 
+			math.floor((outerW - objectW)/2),
+			math.floor((outerH - objectH)/2),
+			nil
+	end
+
+	if typeScale == "max" then
+		s = math.min(outerW/objectW , outerH/objectH)
+	elseif typeScale == "int" then
+		s = math.floor( math.min(outerW/objectW , outerH/objectH) )
+	elseif typeScale == "none" then
+		s = 1
+	end
+
+	local x = math.floor((outerW - objectW*s)/2)
+	local y = math.floor((outerH - objectH*s)/2)
+
+	return x,y,s
+end

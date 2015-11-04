@@ -1,6 +1,7 @@
 
 
 _Debug = true
+_Release = true
 
 function love.conf(t)
 	t.console = false

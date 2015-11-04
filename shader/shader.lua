@@ -1,7 +1,7 @@
 shader = shader or {}
 shader._Loaded = true
-shader.shaderFunctions = love.filesystem.read("shaderfunctions.glsl")
-shader.shaderFunctionsDate = love.filesystem.getLastModified("shaderfunctions.glsl")
+shader.shaderFunctions = love.filesystem.read("shader/shaderfunctions.glsl")
+shader.shaderFunctionsDate = love.filesystem.getLastModified("shader/shaderfunctions.glsl")
 shader.file = shader.file or {}
 shader.name = shader.name or {} -- This does not handle removed or renamed files
 shader.date = shader.date or {}
@@ -69,12 +69,12 @@ end
 
 function shader.hotLoad()
 	shader._Loaded = false
-	if love.filesystem.getLastModified("shaderfunctions.glsl") ~= shader.shaderFunctionsDate then
-		shader.shaderFunctions = love.filesystem.read("shaderfunctions.glsl")
+	if love.filesystem.getLastModified("shader/shaderfunctions.glsl") ~= shader.shaderFunctionsDate then
+		shader.shaderFunctions = love.filesystem.read("shader/shaderfunctions.glsl")
 		for i = 1, #shader.file do
 			loadShader(shader.name[i] , i )
 		end
-		shader.shaderFunctionsDate = love.filesystem.getLastModified("shaderfunctions.glsl")
+		shader.shaderFunctionsDate = love.filesystem.getLastModified("shader/shaderfunctions.glsl")
 		print("Time: ".._TimeF..", All shaders reloaded")
 		shader._Loaded = true
 	else -- if shaderfunctions is loaded all files are reloaded anyways

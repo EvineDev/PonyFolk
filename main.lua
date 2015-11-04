@@ -1,11 +1,11 @@
---require "programwalk"
+--require "game.programwalk"
 --programwalk.start()
 
 do -- Default
 	heart = heart or {}
 	--external libs
-	require "imagedataffilib"
-	require "vector"
+	require "tool.imagedataffilib"
+
 	if heart.init == nil then
 
 		_TableDefault = {}
@@ -23,8 +23,8 @@ do -- Default
 		_toSleep = false
 
 
-		love.filesystem.load("debug.lua") ()
-		love.filesystem.load("shader.lua") ()
+		love.filesystem.load("framework/debug.lua") ()
+		love.filesystem.load("shader/shader.lua") ()
 
 		-- Above and debug.lua is considered Default _G value.
 		-- Move "love.filesystem.load("debug.lua") ()" below to consider debug.lua nondefault.
@@ -32,7 +32,7 @@ do -- Default
 			_TableDefault[k] = true
 		end
 
-		love.filesystem.load("window.lua") ()
+		love.filesystem.load("framework/window.lua") ()
 		window.start()
 
 		heart.init = true
@@ -61,6 +61,8 @@ do -- Default
 		"blendMode",
 		"PSDprintdrawTEST",
 		"blendModeDrawingsTEST",
+		"v",
+		"PriorityQueue",
 
 
 		--Temporary
@@ -107,30 +109,30 @@ function heart.require()
 	_Loaded = false
 	-- Should assert on nonexist file???
 
-	heart.hotLoad("debug.lua")
+	heart.hotLoad("framework/debug.lua")
 	-- Require files
 	heart.hotLoad("main.lua")
-	heart.hotLoad("memcheck.lua")
-	heart.hotLoad("shader.lua")
-	heart.hotLoad("utility.lua")
-	heart.hotLoad("loadimage.lua")
+	heart.hotLoad("tool/memcheck.lua")
+	heart.hotLoad("shader/shader.lua")
+	heart.hotLoad("tool/v.lua")
+	heart.hotLoad("tool/utility.lua")
 
-	heart.hotLoad("window.lua")
-	heart.hotLoad("viewport.lua")
-	heart.hotLoad("keyboard.lua")
+	heart.hotLoad("framework/window.lua")
+	heart.hotLoad("framework/viewport.lua")
+	heart.hotLoad("framework/keyboard.lua")
 
-	heart.hotLoad("ui.lua")
-	heart.hotLoad("mouse.lua")
+	heart.hotLoad("framework/ui.lua")
+	heart.hotLoad("framework/mouse.lua")
 
-	heart.hotLoad("blendmodes.lua")
-	heart.hotLoad("filter.lua")
+	heart.hotLoad("shader/blendmodes.lua")
+	heart.hotLoad("shader/filter.lua")
 
-	heart.hotLoad("tile.lua")
-	heart.hotLoad("entity.lua")
+	heart.hotLoad("game/tile.lua")
+	heart.hotLoad("game/entity.lua")
 
-	heart.hotLoad("grid.lua")
-	heart.hotLoad("asset.lua")
-	heart.hotLoad("path.lua")	
+	heart.hotLoad("game/grid.lua")
+	heart.hotLoad("game/asset.lua")
+	heart.hotLoad("game/path.lua")	
 end
 
 

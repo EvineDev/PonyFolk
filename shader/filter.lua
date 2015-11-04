@@ -1,10 +1,10 @@
 filter = {}
 
-local base = base or love.graphics.newImage("filter/base.png") -- -0.468,-0.148
+local base = base or love.graphics.newImage("shader/filter/base.png") -- -0.468,-0.148
 
-local AJ = AJ or love.graphics.newImage("blendmode/applejackbase.png")
+local AJ = AJ or love.graphics.newImage("shader/blendmode/applejackbase.png")
 
-filter.filterBC = shader.new("filter/filterBC.glsl")
+filter.filterBC = shader.new("shader/filter/filterBC.glsl")
 local brightnessValue = brightnessValue or 0
 local contrastValue = contrastValue or 1
 local desaturateValue = desaturateValue or 1

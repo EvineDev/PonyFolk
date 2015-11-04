@@ -106,7 +106,7 @@ end
 
 
 --Hack
-require "path"
+require "game.path"
 -- The actual collisions
 tile.addWall(tile[6][5], tile.SOUTH_WEST)
 tile.addWall(tile[7][5], tile.SOUTH_WEST)

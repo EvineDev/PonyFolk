@@ -1,6 +1,6 @@
 
-require "priorityqueue"
-local Set = require "set"
+require "tool.priorityqueue"
+local Set = require "tool.set"
 
 path = path or {}
 

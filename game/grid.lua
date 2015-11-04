@@ -1,6 +1,6 @@
 
-heart.hotLoad("entity.lua",true)
-heart.hotLoad("tile.lua",true) -- clear tile table, Remove for release.
+heart.hotLoad("game/entity.lua",true)
+heart.hotLoad("game/tile.lua",true) -- clear tile table, Remove for release.
 
 grid = grid or {}
 
@@ -22,7 +22,7 @@ grid.outline.height = 12
 
 grid.bufferDraw = {}
 
-grid.mouse = v2.new()
+grid.mouse = {x=0,y=0}
 
 grid.tilePressedX = 0
 grid.tilePressedY = 0

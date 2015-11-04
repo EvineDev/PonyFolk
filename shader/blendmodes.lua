@@ -1,12 +1,12 @@
 blendMode = blendMode or {}
 
 blendMode.canvas = blendMode.canvas or love.graphics.newCanvas(1920,1080)
-blendMode.overlay = blendMode.overlay or shader.new("blendmode/overlay.glsl")
-blendMode.multiply = blendMode.multiply or shader.new("blendmode/multiply.glsl")
-blendMode.screen = blendMode.screen or shader.new("blendmode/screen.glsl")
+blendMode.overlay = blendMode.overlay or shader.new("shader/blendmode/overlay.glsl")
+blendMode.multiply = blendMode.multiply or shader.new("shader/blendmode/multiply.glsl")
+blendMode.screen = blendMode.screen or shader.new("shader/blendmode/screen.glsl")
 
-local AJi = AJi or love.graphics.newImage("blendmode/applejackbase.png")
-local AJm = AJm or love.graphics.newImage("blendmode/applejackshade4.png")
+local AJi = AJi or love.graphics.newImage("shader/blendmode/applejackbase.png")
+local AJm = AJm or love.graphics.newImage("shader/blendmode/applejackshade4.png")
 
 
 function heart.graphics.draw(image,mode,x,y)

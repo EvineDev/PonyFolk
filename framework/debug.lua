@@ -42,7 +42,7 @@ function heart.debug.keypressed(key,isHeld)
 	if key == "escape" then
 		love.event.quit()
 	end
-	if key == "d" then -- Disable for release ----------------------------------
+	if key == "d" and not _Release then 
 		keyboard.TimeSincePressedTheD = love.timer.getTime()
 	end
 	if _Debug then
@@ -70,7 +70,7 @@ end
 
 
 function heart.debug.keyreleased(key)
-	if key == "d" then -- Disable for release ----------------------------------
+	if key == "d" and not _Release then 
 		if love.timer.getTime() - keyboard.TimeSincePressedTheD < 0.4 or not _Debug then
 			_Debug = not _Debug
 		else
@@ -90,7 +90,10 @@ function heart.debug.update()
 		heart.debug.drawCalls = love.graphics.getStats().drawcalls
 
 		love.graphics.setFont(heart.debug.font)
-		love.graphics.setColor(255,200,200)
+		--love.graphics.setColor(255,200,200)
+		love.graphics.setColor(100,100,255)
+		love.graphics.setLineWidth(1)
+		love.graphics.setLineJoin("none")
 		
 		local printLength
 		local fontSpacing
